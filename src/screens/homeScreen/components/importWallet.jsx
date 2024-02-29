@@ -1,30 +1,53 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { TextInput, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons"; // Make sure to install the Feather icon package
 import LabeledInput from "../../../components/labeledInput";
+import PrimaryButton from "../../../components/primaryButton";
 import walletStore from "../../../store/walletStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 
 const ImportWallet = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const [enterPrivateKey, setEnterPrivateKey] = useState("");
+  const [inputError, setInputError] = useState("");
   const activeWalletName = walletStore.activeWallet;
-  const handleEyePress = (isPasswordVisible) => {
-    // Handle logic when eye icon is pressed
-    console.log(`Password visibility toggled: ${isPasswordVisible}`);
+  
+  const handleButtonPress = () => {
+    if (!validateInput()) {
+      return;
+    }
+
   };
+
+  const validateInput = () => {
+    if (!enterPrivateKey) {
+      setInputError("Private key is required");
+      return false;
+    }
+
+    setInputError("");
+    return true;
+  };
+
+  const handlePrivateKeyInput = (text) => {
+    setEnterPrivateKey(text);
+    setInputError("");
+  }
+
   return (
     <Container>
       <TextContainer>
         <MessageText>
-          Please enter your {activeWalletName} wallet's private key to import your wallet information.
+          Please import your {activeWalletName} wallet
         </MessageText>
       </TextContainer>
       <LabeledInput
         placeholder="Enter Private Key"
         secureTextEntry={true}
-        onEyePress={handleEyePress}
+        onChangeText={(text) => handlePrivateKeyInput(text)}
+        value={enterPrivateKey}
+        error={inputError}
       />
+       <PrimaryButton onPress={handleButtonPress} text="Import Wallet" />
     </Container>
   );
 };
@@ -42,37 +65,4 @@ const TextContainer = styled.View`
 const MessageText = styled.Text`
   margin-bottom: 20px;
   font-size: 18px;
-`;
-
-const InputContainer = styled.View`
-width: 80%;
-margin-bottom: 20px;
-flex-direction: row;
-align-items: center;
-`;
-
-const LabelContainer = styled.View`
-flex-direction: row;
-align-items: center;
-margin-right: 10px;
-`;
-
-const IconWrapper = styled.View`
-margin-right: 5px;
-`;
-
-const LabelText = styled.Text`
-font-size: 16px;
-color: #333;
-`;
-
-const StyledTextInput = styled.TextInput`
-flex: 1;
-padding: 10px;
-border-radius: 10px;
-border: 1px solid #ccc;
-`;
-
-const ToggleEyeButton = styled(TouchableOpacity)`
-padding: 10px;
 `;

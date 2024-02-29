@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { PRIMARY_COLOR, WHITE_COLOR } from "../constants/commonConstants";
 
 const TabContainer = ({ options, onTabPress, activeTab, ...props }) => {
 
@@ -43,7 +44,7 @@ const TabButton = styled(TouchableOpacity)`
   flex: ${({ buttonWidth }) => buttonWidth};
   padding: 16px 10px;
   border-radius: 30px;
-  background-color: ${({ isSelected }) => (isSelected ? "#3498db" : "transparent")}; /* Blue background for selected tab */
+  background-color: ${({ isSelected }) => (isSelected ? PRIMARY_COLOR : "transparent")}; /* Blue background for selected tab */
 `;
 
 const TabText = styled.Text`
