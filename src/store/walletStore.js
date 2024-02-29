@@ -1,9 +1,10 @@
 import { observable, computed } from "mobx";
 import * as WalletActions from "./walletActions";
+import { BITCOIN, POLYGON, BTC, USDT } from "../constants/commonConstants";
 
 class WalletStore {
-  @observable activeWallet = "bitcoin";
-  @observable privateKey = "";
+  @observable activeWallet = BITCOIN;
+  @observable privateKey = null;
   @observable address = "";
   @observable balance = 0;
   @observable transactionHistory = [];
@@ -13,10 +14,10 @@ class WalletStore {
     WalletActions.loadWalletFromLocalStorage(this);
   }
 
-  switchNetwork = WalletActions.switchNetwork;
+  switchWallet = WalletActions.switchWallet;
 
   @computed get currentNetworkCurrency() {
-    return this.activeWallet === "bitcoin" ? "BTC" : "USDT";
+    return this.activeWallet === BITCOIN ? BTC : USDT;
   }
 }
 

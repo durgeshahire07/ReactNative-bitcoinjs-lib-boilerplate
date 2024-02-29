@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
 import styled from "styled-components/native";
+import { Text } from "react-native";
 import walletStore from "../../store/walletStore";
 import TabContainer from "../../components/tabContainer";
+import ImportWallet from "./components/importWallet";
+import { BITCOIN, POLYGON } from "../../constants/commonConstants";
 
 const HomeScreen = () => {
-  const [activeTab, setActiveTab] = useState("Bitcoin");
+    const tabOptions = [BITCOIN, POLYGON]
+    const [activeTab, setActiveTab] = useState(tabOptions[0]);
+    const [privateKey, setPrivateKey] = useState(null);
 
-  const handleTabPress = (selectedOption) => {
-    console.log(`Selected option: ${selectedOption}`);
-    setActiveTab(selectedOption);
+    const handleTabPress = (selectedOption) => {
+        setActiveTab(selectedOption);
 
-    // Call the switchNetwork action in the walletStore
-    walletStore.switchNetwork(walletStore, selectedOption.toLowerCase())
-    // Add any logic you need when a tab is pressed
-  };
+        // Call the switchNetwork action in the walletStore
+        walletStore.switchWallet(walletStore, selectedOption.toLowerCase())
+        fetchPrivateKey();
+    };
 
-  useEffect(()=>{
-    console.log(walletStore.activeWallet)
-},[])
+    const fetchPrivateKey = () => {
+        setPrivateKey(walletStore.privateKey)
+    };
 
-  return (
-    <Container>
-      <TopContainer>
-        <TabContainer
-          options={["Bitcoin", "Polygon"]}
-          onTabPress={handleTabPress}
-          activeTab={activeTab}
-        />
-      </TopContainer>
+    useEffect(() => {
+        // Fetch private key on inital render
+        fetchPrivateKey();
+        console.log(privateKey)
+    }, []);
 
-      <Text>selected wallet is: {walletStore.activeWallet}</Text>
-     
-    </Container>
-  );
+    return (
+        <React.Fragment>
+            <TopContainer>
+                <TabContainer
+                    options={tabOptions}
+                    onTabPress={handleTabPress}
+                    activeTab={activeTab}
+                />
+            </TopContainer>
+            <Container>
+
+                {privateKey ? (
+                    <Text>Selected Network {walletStore.activeWallet}: key: {privateKey}</Text>
+                ) : (
+                    <ImportWallet />
+                )}
+
+            </Container>
+        </React.Fragment>
+    );
 };
 
 export default HomeScreen;

@@ -34,9 +34,7 @@ export default TabContainer;
 const TabContainerWrapper = styled.View`
   width: 100%;
   flex-direction: row;
-  align-items: center;
-  padding: 10px;
-  justify-content: space-around;
+  padding: 5px;
   background-color: #dcdcdc; /* Grey background color */
   border-radius: 40px;
 `;
