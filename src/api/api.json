@@ -1,8 +1,0 @@
-{
-  "bitcoin": {
-    "price": "https://api.coindesk.com/v1/bpi/currentprice.json"
-  },
-  "polygon": {
-    "price": "https://api.coingecko.com/api/coins/tether"
-  }
-}

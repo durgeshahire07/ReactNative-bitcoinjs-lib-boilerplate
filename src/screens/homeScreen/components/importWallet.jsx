@@ -15,7 +15,6 @@ const ImportWallet = () => {
     if (!validateInput()) {
       return;
     }
-
   };
 
   const validateInput = () => {

@@ -4,6 +4,7 @@ import { Text } from "react-native";
 import walletStore from "../../store/walletStore";
 import TabContainer from "../../components/tabContainer";
 import ImportWallet from "./components/importWallet";
+import CurrencyPrice from "./components/currencyPrice";
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
 
 const HomeScreen = () => {
@@ -38,8 +39,8 @@ const HomeScreen = () => {
                     activeTab={activeTab}
                 />
             </TopContainer>
+            <CurrencyPrice />
             <Container>
-
                 {privateKey ? (
                     <Text>Selected Network {walletStore.activeWallet}: key: {privateKey}</Text>
                 ) : (
