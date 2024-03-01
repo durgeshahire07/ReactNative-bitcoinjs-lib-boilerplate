@@ -6,6 +6,7 @@ import TabContainer from "../../components/tabContainer";
 import ImportWallet from "./components/importWallet";
 import CurrencyPrice from "./components/currencyPrice";
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
+import WalletComponent from "./components/walletComponent";
 
 const HomeScreen = () => {
     const tabOptions = [BITCOIN, POLYGON]
@@ -30,6 +31,23 @@ const HomeScreen = () => {
         console.log(privateKey)
     }, []);
 
+    // const [privateKey, setPrivateKey] = useState('c0872b9039888bce87ffd8f7823907647dd0c2158bd88eecad5f1536a9e623d9');
+    // const wallet = new Wallet(privateKey);
+    // console.log("wallet=======>", wallet)
+    // const importWallet = async () => {
+    //     try {
+
+
+    //         // Use the wallet to interact with contracts, send transactions, etc.
+    //     } catch (error) {
+    //         console.error('Error importing wallet:', error);
+    //     }
+    // };
+
+    // useEffect(()=>{
+    //     importWallet();
+    // }, [])
+
     return (
         <HomeConatainer>
             <TopContainer>
@@ -39,21 +57,24 @@ const HomeScreen = () => {
                     activeTab={activeTab}
                 />
             </TopContainer>
-            <CurrencyPrice />
-            <Container>
+            <WalletComponent />
+
+            {/* <CurrencyPrice /> */}
+            {/* <Container>
                 {privateKey ? (
                     <Text>Selected Network {walletStore.activeWallet}: key: {privateKey}</Text>
                 ) : (
                     <ImportWallet />
                 )}
 
-            </Container>
+            </Container> */}
         </HomeConatainer>
     );
 };
 
 export default HomeScreen;
-const HomeConatainer = styled.View`
+
+const HomeConatainer = styled.ScrollView`
 background-color: white;
 flex: 1;
 

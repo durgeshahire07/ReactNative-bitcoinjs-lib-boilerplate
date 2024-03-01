@@ -36,7 +36,7 @@ const TabContainerWrapper = styled.View`
   width: 100%;
   flex-direction: row;
   padding: 5px;
-  background-color: #dcdcdc; /* Grey background color */
+  background-color: #dcdcdcc7; 
   border-radius: 40px;
 `;
 
@@ -44,10 +44,11 @@ const TabButton = styled(TouchableOpacity)`
   flex: ${({ buttonWidth }) => buttonWidth};
   padding: 16px 10px;
   border-radius: 30px;
-  background-color: ${({ isSelected }) => (isSelected ? PRIMARY_COLOR : "transparent")}; /* Blue background for selected tab */
+  background-color: ${({ isSelected }) => (isSelected ? 'white' : "transparent")}; 
 `;
 
 const TabText = styled.Text`
   text-align: center;
-  color: ${({ isSelected }) => (isSelected ? "#fff" : "#000")}; /* White text for selected, black for unselected */
+  color: ${({ isSelected }) => (isSelected ? "black" : "black")}; 
+  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
 `
