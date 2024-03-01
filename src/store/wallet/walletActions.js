@@ -3,63 +3,84 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosCallAdvanced } from "../../api/main";
 import apiEndpoints from "../../api/endpoints"
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
+import { Wallet } from 'ethers';
+import { isPolygonPrivateKeyValid } from "../../utils/stringValidation";
 
-export const importWallet = action((walletStore, privateKey, walletType) => {
-    // Implement logic to import wallet based on walletType (bitcoin or polygon)
-    walletStore.privateKey = privateKey;
-    walletStore.activeWallet = walletType;
-    // Update address and balance
+export const isWalletActive = action(async (walletStore, walletType, loading) => {
+    try {
+        const pvtKey = await AsyncStorage.getItem(`${walletType}PrivateKey`);
+        // await AsyncStorage.clear();
+        console.log("wallet type===>", walletType, "pvt key====>", pvtKey)
+        loading(false)
+        if (pvtKey) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+        // if(walletStore.privateKey){
+        //     return true;
+        // }
+        // else{
+        //     return false;
+        // }
+    } catch (error) {
+        console.error("Error fetching crypto prices:", error);
+        return false;
+    }
 });
 
-export const switchWallet = action(async (walletStore, network) => {
-    // Reset the state before switching the wallet
+export const importWallet = action(async ({ walletStore, walletType, privateKey }) => {
+    console.log("pvt key===>", privateKey)
+    let walletAddress = ''
+    if (isPolygonPrivateKeyValid(privateKey)) {
+        const wallet = new Wallet(privateKey);
+        walletAddress = wallet.address;
+        walletStore.privateKey = privateKey;
+        walletStore.activeWallet = walletType;
+        await AsyncStorage.setItem(`${walletType}PrivateKey`, privateKey);
+        return true;
+    }
+    else {
+        return false;
+    }
+
+    // Save private key to AsyncStorage
+    // AsyncStorage.setItem(`${walletType}PrivateKey`, privateKey);
+
+});
+
+export const switchWallet = action(async (walletStore, network, loading) => {
+    loading(true);
+    console.log("inside switch wallet")
+
+    walletStore.activeWallet = network;
     walletStore.privateKey = null;
     walletStore.address = "";
     walletStore.balance = 0;
     walletStore.transactionHistory = [];
 
-    walletStore.activeWallet = network;
-    const privateKey = await AsyncStorage.getItem(`${network}PrivateKey`);
+    // const storedPvtKey = await AsyncStorage.getItem(`${network}PrivateKey`);
+    // walletStore.activeWallet = network;
 
-    if (privateKey) {
-        walletStore.privateKey = privateKey;
-    } else {
-        walletStore.privateKey = null;
-    }
-    // Implement logic to switch network
-});
-
-// Action to fetch cryptocurrency prices
-export const fetchCryptoPrices = action(async (walletStore, setLoading) => {
-    try {
-        const activeWallet = walletStore.activeWallet;
-        let endpoint = "";
-
-        if (activeWallet === BITCOIN) {
-            endpoint = apiEndpoints.cryptoPrice.bitcoin
-        } else if (activeWallet === POLYGON) {
-            endpoint = apiEndpoints.cryptoPrice.bitcoin;
-        } else {
-            console.error("Invalid active wallet:", activeWallet);
-            return;
-        }
-        // Fetch cryptocurrency price
-        const response = await axiosCallAdvanced({
-            baseURL: endpoint,
-            method: apiEndpoints.methodType.get,
-        });
-
-        if (response.data) {
-            console.log("response=====>", response.data)
-            walletStore.selectedCryptoPrice = response?.data?.price || 0;
-            console.log("wallet updated", walletStore.selectedCryptoPrice)
-            setLoading(false)
-        }
-
-    } catch (error) {
-        console.error("Error fetching crypto prices:", error);
-    } finally {
-    }
+    // if (!storedPvtKey) {
+    //     console.log("SW: no pvt key")
+    //     // Reset the state before switching the wallet
+    //     walletStore.privateKey = null;
+    //     walletStore.address = "";
+    //     walletStore.balance = 0;
+    //     walletStore.transactionHistory = [];
+    // }
+    // else {
+    //     console.log("SW: pvt key exit")
+    //     walletStore.balance = 100.00;
+    //     walletStore.privateKey = storedPvtKey;
+    //     const wallet = new Wallet(storedPvtKey);
+    //     if (wallet.address) {
+    //         walletStore.address = wallet.address
+    //     }
+    // }
 });
 
 
@@ -80,3 +101,8 @@ export const loadWalletFromLocalStorage = action(async (walletStore) => {
         importWallet(walletStore, null, walletStore.activeWallet);
     }
 });
+
+export const fetchWalletBalance = action(async (walletStore, loading) => {
+
+});
+

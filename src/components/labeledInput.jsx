@@ -59,7 +59,7 @@ const InputContainer = styled.View`
 
 const StyledTextInput = styled.TextInput`
   flex: 1;
-  padding: 16px;
+  padding: 16px 50px 16px 16px;
   border-radius: 30px;
   /* border: 1px solid #ccc; */
   border: 1px solid ${({ error }) => (error ? 'red' : '#ccc')}; 

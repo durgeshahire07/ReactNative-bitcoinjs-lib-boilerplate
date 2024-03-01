@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import { Text } from "react-native";
+import { ActivityIndicator, Alert, ToastAndroid } from "react-native";
 import walletStore from "../../store/wallet/walletStore";
 import TabContainer from "../../components/tabContainer";
 import ImportWallet from "./components/importWallet";
@@ -11,42 +11,57 @@ import WalletComponent from "./components/walletComponent";
 const HomeScreen = () => {
     const tabOptions = [BITCOIN, POLYGON]
     const [activeTab, setActiveTab] = useState(tabOptions[0]);
-    const [privateKey, setPrivateKey] = useState(null);
+    const [showWallet, setShowWallet] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [fetchWallet, setFetchWallet] = useState({
+        state: false,
+        key: ''
+    });
+
+    const checkWalletStatus = async () => {
+        const isWalletActive = await walletStore.isWalletActive(walletStore, activeTab, setLoading);
+        if (isWalletActive) {
+            setShowWallet(true);
+            console.log("show wallet")
+        } else {
+            setShowWallet(false);
+        }
+        setLoading(false)
+    };
 
     const handleTabPress = (selectedOption) => {
         setActiveTab(selectedOption);
 
         // Call the switchNetwork action in the walletStore
-        walletStore.switchWallet(walletStore, selectedOption.toLowerCase())
-        fetchPrivateKey();
+        walletStore.switchWallet(walletStore, selectedOption.toLowerCase(), setLoading)
+        checkWalletStatus();
     };
 
-    const fetchPrivateKey = () => {
-        setPrivateKey(walletStore.privateKey)
-    };
+    const performWalletImport = async () => {
+        const walletImported = await walletStore.importWallet({ walletStore: walletStore, walletType: activeTab, privateKey: fetchWallet.key });
+        setLoading(false);
+        if (walletImported) {
+            checkWalletStatus();
+        }
+        else {
+            Alert.alert("Something went wrong... Try again later!")
+        }
+    }
+    useEffect(() => {
+        if (fetchWallet.state) {
+            console.log("wallet fetch is true========> checkinf wallet status")
+            setLoading(true);
+            performWalletImport();
+            // checkWalletStatus();
+        }
+    }, [fetchWallet])
+
+    console.log("fetch wallet state======>", fetchWallet.state)
 
     useEffect(() => {
-        // Fetch private key on inital render
-        fetchPrivateKey();
-        console.log(privateKey)
-    }, []);
-
-    // const [privateKey, setPrivateKey] = useState('c0872b9039888bce87ffd8f7823907647dd0c2158bd88eecad5f1536a9e623d9');
-    // const wallet = new Wallet(privateKey);
-    // console.log("wallet=======>", wallet)
-    // const importWallet = async () => {
-    //     try {
-
-
-    //         // Use the wallet to interact with contracts, send transactions, etc.
-    //     } catch (error) {
-    //         console.error('Error importing wallet:', error);
-    //     }
-    // };
-
-    // useEffect(()=>{
-    //     importWallet();
-    // }, [])
+        setLoading(true);
+        checkWalletStatus();
+    }, [activeTab]);
 
     return (
         <HomeConatainer>
@@ -57,17 +72,25 @@ const HomeScreen = () => {
                     activeTab={activeTab}
                 />
             </TopContainer>
-            <WalletComponent />
+
+            {
+                loading ?
+                    <ActivityIndicator size="large" color="#3498db" />
+                    :
+                    <Container>
+                        {showWallet ? (
+                            <WalletComponent />
+                        ) : (
+                            <ImportWallet updateFetchWallet={setFetchWallet} />
+                        )}
+                    </Container>
+            }
+
 
             {/* <CurrencyPrice /> */}
-            {/* <Container>
-                {privateKey ? (
-                    <Text>Selected Network {walletStore.activeWallet}: key: {privateKey}</Text>
-                ) : (
-                    <ImportWallet />
-                )}
 
-            </Container> */}
+
+
         </HomeConatainer>
     );
 };

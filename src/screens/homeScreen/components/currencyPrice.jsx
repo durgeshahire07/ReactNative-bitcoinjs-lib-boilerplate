@@ -59,7 +59,7 @@ const CurrencyPrice = () => {
       )}
       {
         loading ?
-          <ActivityIndicator size="large" color="#203e94" />
+          <ActivityIndicator size="large" color="#3498db" />
           :
           <>
             <RowContainer>

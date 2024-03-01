@@ -4,22 +4,32 @@ import LabeledInput from "../../../components/labeledInput";
 import PrimaryButton from "../../../components/primaryButton";
 import walletStore from "../../../store/wallet/walletStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
+import { Wallet } from 'ethers';
+import { isPolygonPrivateKeyValid } from "../../../utils/stringValidation";
 
-const ImportWallet = () => {
+const ImportWallet = ({ updateFetchWallet }) => {
 
-  const [enterPrivateKey, setEnterPrivateKey] = useState("");
+  const [enteredPrivateKey, setEnteredPrivateKey] = useState("");
   const [inputError, setInputError] = useState("");
   const activeWalletName = walletStore.activeWallet;
-  
-  const handleButtonPress = () => {
+
+  const handleButtonPress = async () => {
     if (!validateInput()) {
       return;
+    }
+    else{
+      updateFetchWallet({ state: true, key: enteredPrivateKey });
     }
   };
 
   const validateInput = () => {
-    if (!enterPrivateKey) {
+    if (!enteredPrivateKey) {
       setInputError("Private key is required");
+      return false;
+    }
+
+    if (!isPolygonPrivateKeyValid(enteredPrivateKey)) {
+      setInputError("Invalid key");
       return false;
     }
 
@@ -28,7 +38,7 @@ const ImportWallet = () => {
   };
 
   const handlePrivateKeyInput = (text) => {
-    setEnterPrivateKey(text);
+    setEnteredPrivateKey(text);
     setInputError("");
   }
 
@@ -43,10 +53,10 @@ const ImportWallet = () => {
         placeholder="Enter Private Key"
         secureTextEntry={true}
         onChangeText={(text) => handlePrivateKeyInput(text)}
-        value={enterPrivateKey}
+        value={enteredPrivateKey}
         error={inputError}
       />
-       <PrimaryButton onPress={handleButtonPress} text="Import Wallet" />
+      <PrimaryButton onPress={handleButtonPress} text="Import Wallet" />
     </Container>
   );
 };
