@@ -3,18 +3,20 @@ import { ActivityIndicator, Text, Button } from "react-native";
 import styled from "styled-components/native";
 import walletStore from "../../../store/wallet/walletStore";
 import cryptoStore from "../../../store/crypto/cryptoStore"
-import { observer } from 'mobx-react';
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
+import { Foundation } from "@expo/vector-icons";
 
 const CurrencyPrice = () => {
   const [cryptoValue, setCryptoValue] = useState('--');
   const [loading, setLoading] = useState(true);
+  const [lastUpdate, setLastUpdate] = useState(null);
 
   const fetchCryptoVal = async () => {
     try {
       let res = await cryptoStore.fetchValue();
       if (res) {
-        setCryptoValue(cryptoStore.value)
+        setCryptoValue(cryptoStore.value);
+        setLastUpdate(new Date().toLocaleTimeString());
       }
       else {
 
@@ -24,6 +26,11 @@ const CurrencyPrice = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchCryptoVal();
   }
 
   useEffect(() => {
@@ -54,12 +61,21 @@ const CurrencyPrice = () => {
         loading ?
           <ActivityIndicator size="large" color="#203e94" />
           :
-          <CurrentValue>{
-            cryptoStore.value ?
-              `$${parseFloat(cryptoValue).toFixed(2)}`
-              :
-              '--'
-          }</CurrentValue>
+          <>
+            <RowContainer>
+              <CurrentValue>{
+                cryptoStore.value ?
+                  `$${parseFloat(cryptoValue).toFixed(2)}`
+                  :
+                  '--'
+              }</CurrentValue>
+              <Foundation onPress={handleRefresh} name="refresh" size={20} color="#000000a2" />
+            </RowContainer>
+            <RowContainer>
+              <LastUpdateText>Last update:</LastUpdateText>
+              <LastUpdateText>{lastUpdate || '--'}</LastUpdateText>
+            </RowContainer>
+          </>
       }
 
     </Container>
@@ -69,7 +85,7 @@ const CurrencyPrice = () => {
 export default CurrencyPrice;
 
 const Container = styled.View`
-  /* flex: 1; */
+  /* flex: 1;n */
   margin: 0px 0px 50px 0px;
 `;
 
@@ -93,9 +109,22 @@ const CurrencyText = styled.Text`
 `;
 
 const CurrentValue = styled.Text`
-  margin-top: 10px;
-  font-size: 24px;
+  margin: 0px 15px 0px 0px;
+  font-size: 26px;
   text-align: center;
   font-weight: bold;
 `;
 
+const RowContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const LastUpdateText = styled.Text`
+  font-size: 14px;
+  text-align: center;
+  margin-right: 5px;
+  color: grey;
+`;
