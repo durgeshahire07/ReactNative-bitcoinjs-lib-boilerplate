@@ -31,7 +31,7 @@ const HomeScreen = () => {
     }, []);
 
     return (
-        <React.Fragment>
+        <HomeConatainer>
             <TopContainer>
                 <TabContainer
                     options={tabOptions}
@@ -48,14 +48,17 @@ const HomeScreen = () => {
                 )}
 
             </Container>
-        </React.Fragment>
+        </HomeConatainer>
     );
 };
 
 export default HomeScreen;
+const HomeConatainer = styled.View`
+background-color: white;
+flex: 1;
 
+`
 const Container = styled.View`
-  flex: 1;
   padding: 0px 20px;
 `;
 

@@ -54,7 +54,7 @@ const ImportWallet = () => {
 export default ImportWallet;
 
 const Container = styled.View`
-  flex: 1;
+  /* flex: 1; */
 `;
 
 const TextContainer = styled.View`

@@ -68,11 +68,9 @@ const CurrencyPrice = () => {
 
 export default CurrencyPrice;
 
-// Rest of the component remains the same
-
-
 const Container = styled.View`
-  flex: 1;
+  /* flex: 1; */
+  margin: 0px 0px 50px 0px;
 `;
 
 const ImageContainer = styled.View`
