@@ -1,8 +1,8 @@
 import { action } from "mobx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { axiosCallAdvanced } from "../api/main";
-import apiEndpoints from "../api/endpoints"
-import { BITCOIN, POLYGON } from "../constants/commonConstants";
+import { axiosCallAdvanced } from "../../api/main";
+import apiEndpoints from "../../api/endpoints"
+import { BITCOIN, POLYGON } from "../../constants/commonConstants";
 
 export const importWallet = action((walletStore, privateKey, walletType) => {
     // Implement logic to import wallet based on walletType (bitcoin or polygon)
@@ -12,6 +12,12 @@ export const importWallet = action((walletStore, privateKey, walletType) => {
 });
 
 export const switchWallet = action(async (walletStore, network) => {
+    // Reset the state before switching the wallet
+    walletStore.privateKey = null;
+    walletStore.address = "";
+    walletStore.balance = 0;
+    walletStore.transactionHistory = [];
+
     walletStore.activeWallet = network;
     const privateKey = await AsyncStorage.getItem(`${network}PrivateKey`);
 
@@ -23,19 +29,8 @@ export const switchWallet = action(async (walletStore, network) => {
     // Implement logic to switch network
 });
 
-
-
-
-
-
-
-
-
-
-
-
 // Action to fetch cryptocurrency prices
-export const fetchCryptoPrices = action(async (walletStore) => {
+export const fetchCryptoPrices = action(async (walletStore, setLoading) => {
     try {
         const activeWallet = walletStore.activeWallet;
         let endpoint = "";
@@ -54,23 +49,18 @@ export const fetchCryptoPrices = action(async (walletStore) => {
             method: apiEndpoints.methodType.get,
         });
 
-        walletStore.selectedCryptoPrice = response?.data?.price || 0;
+        if (response.data) {
+            console.log("response=====>", response.data)
+            walletStore.selectedCryptoPrice = response?.data?.price || 0;
+            console.log("wallet updated", walletStore.selectedCryptoPrice)
+            setLoading(false)
+        }
 
     } catch (error) {
         console.error("Error fetching crypto prices:", error);
+    } finally {
     }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 export const sendTransaction = action(async (walletStore, receiverAddress, amount) => {

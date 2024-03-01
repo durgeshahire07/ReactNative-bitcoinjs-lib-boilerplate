@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import LabeledInput from "../../../components/labeledInput";
 import PrimaryButton from "../../../components/primaryButton";
-import walletStore from "../../../store/walletStore";
+import walletStore from "../../../store/wallet/walletStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 
 const ImportWallet = () => {

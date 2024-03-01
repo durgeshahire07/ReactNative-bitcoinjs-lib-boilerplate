@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import styled from "styled-components/native";
-import walletStore from "../../../store/walletStore";
+import walletStore from "../../../store/wallet/walletStore";
 import TabContainer from "../../../components/tabContainer";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 

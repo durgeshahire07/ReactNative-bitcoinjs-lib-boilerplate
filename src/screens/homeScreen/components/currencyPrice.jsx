@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text, Button } from "react-native";
 import styled from "styled-components/native";
-import walletStore from "../../../store/walletStore";
+import walletStore from "../../../store/wallet/walletStore";
+import cryptoStore from "../../../store/crypto/cryptoStore"
+import { observer } from 'mobx-react';
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 
 const CurrencyPrice = () => {
+  const [cryptoValue, setCryptoValue] = useState('--');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await walletStore.fetchCryptoPrices(walletStore);
-      if (walletStore.selectedCryptoPrice) {
-        setLoading(false);
+  const fetchCryptoVal = async () => {
+    try {
+      let res = await cryptoStore.fetchValue();
+      if (res) {
+        setCryptoValue(cryptoStore.value)
       }
-    };
+      else {
 
-    fetchData();
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setLoading(true);
+    fetchCryptoVal();
   }, [walletStore.activeWallet]);
 
 
@@ -32,17 +45,23 @@ const CurrencyPrice = () => {
       {walletStore.activeWallet === POLYGON && (
         <>
           <ImageContainer>
-            <Image source={require('../../../assets/images/usdt.png')} resizeMode="cover" />
+            <Image source={require('../../../assets/images/polygon.png')} resizeMode="cover" />
           </ImageContainer>
           <CurrencyText>USDT</CurrencyText>
         </>
       )}
       {
-        !walletStore.selectedCryptoPrice || loading ?
+        loading ?
           <ActivityIndicator size="large" color="#203e94" />
           :
-          <CurrentValue>${parseFloat(walletStore.selectedCryptoPrice).toFixed(2)}</CurrentValue>
+          <CurrentValue>{
+            cryptoStore.value ?
+              `$${parseFloat(cryptoValue).toFixed(2)}`
+              :
+              '--'
+          }</CurrentValue>
       }
+
     </Container>
   );
 };
