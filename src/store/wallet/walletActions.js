@@ -22,14 +22,13 @@ export const isWalletActive = action(async (walletStore, walletType) => {
             };
         }
     } catch (error) {
-        console.error("Error fetching crypto prices:", error);
+        console.error("error in getting wallet status:", error);
         return false;
     }
 });
 
 export const importWallet = action(async ({ walletStore, walletType, privateKey }) => {
     if (isPolygonPrivateKeyValid(privateKey)) {
-        console.log("import wallet for===>", walletType)
         try {
             // const wallet = new Wallet(privateKey);
             const provider = new ethers.AlchemyProvider("maticmum", "v__tED_f4Ncl-dB56BY1XeaHQldWu5VH")
@@ -59,9 +58,6 @@ export const importWallet = action(async ({ walletStore, walletType, privateKey 
         return false;
     }
 
-    // Save private key to AsyncStorage
-    // AsyncStorage.setItem(`${walletType}PrivateKey`, privateKey);
-
 });
 
 export const switchWallet = action(async (walletStore, network, loading) => {
@@ -70,35 +66,21 @@ export const switchWallet = action(async (walletStore, network, loading) => {
     walletStore.activeWallet = network;
 
     if (!storedPvtKey) {
-        console.log("SW: no pvt key")
         // Reset the state before switching the wallet
         walletStore.privateKey = null;
-        walletStore.address = "";
+        walletStore.address = "--";
         walletStore.balance = 0;
         walletStore.transactionHistory = [];
     }
     else {
         const walletImported = await importWallet({ walletStore, walletType: network, privateKey: storedPvtKey });
-        console.log("wallet imported ==>", walletImported)
-        if (walletImported) {
-            console.log("going inside if")
-            console.log(walletStore.address)
-        }
-        else {
-            console.log("going inside else")
+        if (!walletImported) {
             // Reset the state before switching the wallet
             walletStore.privateKey = null;
-            walletStore.address = "";
+            walletStore.address = "--";
             walletStore.balance = 0;
             walletStore.transactionHistory = [];
         }
-        // console.log("SW: pvt key exit")
-        // walletStore.balance = 100.00;
-        // walletStore.privateKey = storedPvtKey;
-        // const wallet = new Wallet(storedPvtKey);
-        // if (wallet.address) {
-        //     walletStore.address = wallet.address
-        // }
     }
     return true;
 });
@@ -124,10 +106,8 @@ export const loadWalletFromLocalStorage = action(async (walletStore) => {
 
 
 export const removeWallet = action(async (walletType) => {
-    console.log("inside wallet remove fn")
     try {
         await AsyncStorage.removeItem(`${walletType}PrivateKey`);
-        console.log("success")
         return true;
     } catch (error) {
         console.error("error removing wallet", error);

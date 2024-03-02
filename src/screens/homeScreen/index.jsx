@@ -21,15 +21,12 @@ const HomeScreen = () => {
 
     const checkWalletStatus = async (selectedOption) => {
         setLoading(true);
-        // console.log("active tab in chk wallet: ",selectedOption)
         const isWalletActive = await walletStore.isWalletActive(walletStore, selectedOption);
-        // console.log("chk wallet status: ", selectedOption, "is wallet active====>", isWalletActive)
         if (isWalletActive.status) {
             setFetchWallet({
                 state: true,
                 key: isWalletActive.key
             })
-            // setShowWallet(true);
         } else {
             setShowWallet(false);
         }
@@ -38,22 +35,17 @@ const HomeScreen = () => {
 
     const handleTabPress = (selectedOption) => {
         setActiveTab(selectedOption);
-
-        // Call the switchNetwork action in the walletStore
-        // await walletStore.switchWallet(walletStore, selectedOption.toLowerCase(), setLoading)
         checkWalletStatus(selectedOption);
     };
 
     const performWalletImport = async () => {
         setLoading(true);
         const walletImported = await walletStore.importWallet({ walletStore: walletStore, walletType: activeTab, privateKey: fetchWallet.key });
-        console.log("wallet imported status for ", activeTab, walletImported)
         setLoading(false);
         if (walletImported) {
             setShowWallet(true);
         }
         else {
-            // setLoading(false);
             Alert.alert("Something went wrong... Try again later!")
         }
     }
@@ -61,7 +53,6 @@ const HomeScreen = () => {
         if (fetchWallet.state) {
             setLoading(true);
             performWalletImport();
-            // checkWalletStatus();
         }
     }, [fetchWallet])
 
@@ -94,11 +85,7 @@ const HomeScreen = () => {
                     </Container>
             }
 
-
             {/* <CurrencyPrice /> */}
-
-
-
         </HomeConatainer>
     );
 };
