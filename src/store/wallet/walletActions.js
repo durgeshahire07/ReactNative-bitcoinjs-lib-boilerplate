@@ -3,8 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosCallAdvanced } from "../../api/main";
 import apiEndpoints from "../../api/endpoints"
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
-import { Wallet, ethers, Provider } from 'ethers';
-import { isPolygonPrivateKeyValid } from "../../utils/stringValidation";
+import { importPolygonWallet, importBitcoinWallet } from "../../utils/walletImport";
 
 export const isWalletActive = action(async (walletStore, walletType) => {
     try {
@@ -28,36 +27,14 @@ export const isWalletActive = action(async (walletStore, walletType) => {
 });
 
 export const importWallet = action(async ({ walletStore, walletType, privateKey }) => {
-    if (isPolygonPrivateKeyValid(privateKey)) {
-        try {
-            // const wallet = new Wallet(privateKey);
-            const provider = new ethers.AlchemyProvider("maticmum", "v__tED_f4Ncl-dB56BY1XeaHQldWu5VH")
-            const wallet = new ethers.Wallet(privateKey, provider);
-            const address = await wallet.getAddress();
-            const bal = await provider.getBalance(address);
-            const balance = ethers.formatEther(bal)
-
-            //updating store values
-            walletStore.privateKey = privateKey;
-            walletStore.activeWallet = walletType;
-            walletStore.address = address;
-            walletStore.balance = balance;
-
-            //storing key in storage
-            await AsyncStorage.setItem(`${walletType}PrivateKey`, privateKey);
-
-            return true;
-        }
-        catch (err) {
-            console.log("error importing wallet", err)
+    switch (walletType) {
+        case POLYGON:
+            return importPolygonWallet(walletStore, privateKey);
+        case BITCOIN:
+            return importBitcoinWallet(walletStore, privateKey);
+        default:
             return false;
-        }
-
     }
-    else {
-        return false;
-    }
-
 });
 
 export const switchWallet = action(async (walletStore, network, loading) => {

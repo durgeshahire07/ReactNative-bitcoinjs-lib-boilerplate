@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { TextInput, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-const LabeledInput = ({ label, placeholder, value, onChangeText, secureTextEntry, onEyePress, error }) => {
+const LabeledInput = ({ label, placeholder, value, onChangeText, secureTextEntry, error }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     return (
@@ -24,7 +24,6 @@ const LabeledInput = ({ label, placeholder, value, onChangeText, secureTextEntry
                 {secureTextEntry && (
                     <ToggleEyeButton onPress={() => {
                         setIsPasswordVisible(!isPasswordVisible);
-                        onEyePress && onEyePress(!isPasswordVisible);
                     }}>
                         <Feather name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="#494949ae" />
                     </ToggleEyeButton>

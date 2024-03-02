@@ -31,7 +31,11 @@ const WalletComponent = ({ walletFetch }) => {
           <BalanceAmount>{walletStore.balance}</BalanceAmount>
         </BalanceContainer>
 
-        <AddressText>Wallet Address - {walletStore.address}</AddressText>
+        <AddressContainer>
+          <AddressLabel>Wallet Address:</AddressLabel>
+          <AddressText>{walletStore.address}</AddressText>
+        </AddressContainer>
+
       </WalletContainer>
 
       <ButtonRow>
@@ -68,7 +72,7 @@ flex: 1;
 
 const WalletContainer = styled.View`
   width: 100%;
-  height: 250px;
+  height: 300px;
   border-radius: 20px;
   background-color: #3498db;
   overflow: hidden;
@@ -104,6 +108,16 @@ const AddressText = styled.Text`
   color: #fff;
   font-size: 16px;
 `;
+
+const AddressContainer = styled.View`
+  
+`
+
+const AddressLabel = styled.Text`
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+`
 
 const ButtonRow = styled.View`
   flex-direction: row;
