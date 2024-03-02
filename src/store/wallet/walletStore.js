@@ -17,6 +17,7 @@ class WalletStore {
   switchWallet = WalletActions.switchWallet;
   importWallet = WalletActions.importWallet;
   isWalletActive = WalletActions.isWalletActive;
+  removeWallet = WalletActions.removeWallet;
 
   @computed get currentNetworkCurrency() {
     return this.activeWallet === BITCOIN ? BTC : USDT;

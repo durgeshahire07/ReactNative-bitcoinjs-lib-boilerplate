@@ -1,37 +1,80 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import styled from "styled-components/native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons"; // Assuming you are using Expo for icons
+import walletStore from "../../../store/wallet/walletStore";
 
-const WalletComponent = () => {
-    const [loading, setLoading] = useState(false);
+const WalletComponent = ({ walletFetch }) => {
+  const [loading, setLoading] = useState(false);
+  const handleRemoveWallet = async () => {
+    const walletRemoved = await walletStore.removeWallet(walletStore.activeWallet);
+    if (walletRemoved) {
+      walletFetch((prev) => !prev)
+    }
+    else {
+      Alert.alert("Seomthing went wrong")
+    }
+  }
 
-    useEffect(() => {
+  useEffect(() => {
+    // console.log(walletStore.balance)
+    // Your additional setup logic if needed
+  }, []);
 
-    }, [])
+  return (
+    <Container>
+      <WalletContainer>
+        <HeaderText>{walletStore.activeWallet} Wallet</HeaderText>
 
-    return (
-        <Container>
-            <HeaderText>Bitcoin Wallet</HeaderText>
+        <BalanceContainer>
+          <BalanceLabel>Wallet Balance</BalanceLabel>
+          <BalanceAmount>{walletStore.balance}</BalanceAmount>
+        </BalanceContainer>
 
-            <BalanceContainer>
-                <BalanceLabel>Wallet Balance</BalanceLabel>
-                <BalanceAmount>$0.001 BTC</BalanceAmount>
-            </BalanceContainer>
+        <AddressText>Wallet Address - {walletStore.address}</AddressText>
+      </WalletContainer>
 
-            <AddressText>Wallet Address - 0x32122313...</AddressText>
-        </Container>
-    );
+      <ButtonRow>
+        <ButtonContainer>
+          <Button>
+            <AntDesign name="arrowup" size={30} color="#4ba3eb" />
+          </Button>
+          <ButtonText>Send</ButtonText>
+
+        </ButtonContainer>
+        <ButtonContainer>
+          <Button>
+            <MaterialIcons name="history" size={30} color="#4ba3eb" />
+          </Button>
+          <ButtonText>History</ButtonText>
+
+        </ButtonContainer>
+        <ButtonContainer>
+          <Button onPress={handleRemoveWallet}>
+            <MaterialIcons name="delete" size={30} color="#f37a7a" />
+          </Button>
+          <ButtonText>Remove</ButtonText>
+        </ButtonContainer>
+
+      </ButtonRow>
+    </Container>
+  );
 };
-
+//if no styles to be given then add React.Fragments later
 const Container = styled.View`
-  width: 90%;
-  height: 250px; 
+flex: 1;
+/* align-items: center; */
+`
+
+const WalletContainer = styled.View`
+  width: 100%;
+  height: 250px;
   border-radius: 20px;
   background-color: #3498db;
-  overflow: hidden; 
-  padding: 20px; 
+  overflow: hidden;
+  padding: 20px;
   align-self: center;
-  justify-content: space-between; 
+  justify-content: space-between;
 `;
 
 const HeaderText = styled.Text`
@@ -41,7 +84,7 @@ const HeaderText = styled.Text`
 `;
 
 const BalanceContainer = styled.View`
-  align-items: center; 
+  align-items: center;
 `;
 
 const BalanceLabel = styled.Text`
@@ -60,6 +103,35 @@ const BalanceAmount = styled.Text`
 const AddressText = styled.Text`
   color: #fff;
   font-size: 16px;
+`;
+
+const ButtonRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px;
+  /* width: 100%; */
+`;
+
+const ButtonContainer = styled.View`
+  text-align: center;
+  align-items: center;
+`
+const Button = styled(TouchableOpacity)`
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+
+  /* For Android */
+  elevation: 5;
+`;
+
+const ButtonText = styled.Text`
+  color: #696969;
+  margin-top: 10px;
+  font-size: 14px;
 `;
 
 export default WalletComponent;

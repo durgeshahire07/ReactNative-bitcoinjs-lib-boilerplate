@@ -13,16 +13,23 @@ const HomeScreen = () => {
     const [activeTab, setActiveTab] = useState(tabOptions[0]);
     const [showWallet, setShowWallet] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const [fetchWallet, setFetchWallet] = useState({
         state: false,
         key: ''
     });
 
-    const checkWalletStatus = async () => {
-        const isWalletActive = await walletStore.isWalletActive(walletStore, activeTab, setLoading);
-        if (isWalletActive) {
-            setShowWallet(true);
-            console.log("show wallet")
+    const checkWalletStatus = async (selectedOption) => {
+        setLoading(true);
+        // console.log("active tab in chk wallet: ",selectedOption)
+        const isWalletActive = await walletStore.isWalletActive(walletStore, selectedOption);
+        // console.log("chk wallet status: ", selectedOption, "is wallet active====>", isWalletActive)
+        if (isWalletActive.status) {
+            setFetchWallet({
+                state: true,
+                key: isWalletActive.key
+            })
+            // setShowWallet(true);
         } else {
             setShowWallet(false);
         }
@@ -33,35 +40,36 @@ const HomeScreen = () => {
         setActiveTab(selectedOption);
 
         // Call the switchNetwork action in the walletStore
-        walletStore.switchWallet(walletStore, selectedOption.toLowerCase(), setLoading)
-        checkWalletStatus();
+        // await walletStore.switchWallet(walletStore, selectedOption.toLowerCase(), setLoading)
+        checkWalletStatus(selectedOption);
     };
 
     const performWalletImport = async () => {
+        setLoading(true);
         const walletImported = await walletStore.importWallet({ walletStore: walletStore, walletType: activeTab, privateKey: fetchWallet.key });
+        console.log("wallet imported status for ", activeTab, walletImported)
         setLoading(false);
         if (walletImported) {
-            checkWalletStatus();
+            setShowWallet(true);
         }
         else {
+            // setLoading(false);
             Alert.alert("Something went wrong... Try again later!")
         }
     }
     useEffect(() => {
         if (fetchWallet.state) {
-            console.log("wallet fetch is true========> checkinf wallet status")
             setLoading(true);
             performWalletImport();
             // checkWalletStatus();
         }
     }, [fetchWallet])
 
-    console.log("fetch wallet state======>", fetchWallet.state)
 
     useEffect(() => {
         setLoading(true);
-        checkWalletStatus();
-    }, [activeTab]);
+        checkWalletStatus(activeTab);
+    }, []);
 
     return (
         <HomeConatainer>
@@ -79,7 +87,7 @@ const HomeScreen = () => {
                     :
                     <Container>
                         {showWallet ? (
-                            <WalletComponent />
+                            <WalletComponent walletFetch={setShowWallet} />
                         ) : (
                             <ImportWallet updateFetchWallet={setFetchWallet} />
                         )}
@@ -98,7 +106,7 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const HomeConatainer = styled.ScrollView`
-background-color: white;
+background-color: #ffffffab;
 flex: 1;
 
 `
