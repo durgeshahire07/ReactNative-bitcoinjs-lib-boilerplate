@@ -37,5 +37,15 @@ export const importPolygonWallet = async (walletStore, privateKey) => {
 }
 
 export const importBitcoinWallet = async () => {
+    try {
+        const network = BitcoinJS.networks.testnet; // Use testnet network
+        const keyPair = BitcoinJS.ECPair.fromWIF(privateKey, network);
 
+        // Perform wallet operations here (e.g., get balance)
+
+        // **Important:** Clear the private key after usage
+        privateKey = null;
+    } catch (error) {
+        console.error('Error importing wallet:', error);
+    }
 }

@@ -34,8 +34,10 @@ const HomeScreen = () => {
     };
 
     const handleTabPress = (selectedOption) => {
-        setActiveTab(selectedOption);
-        checkWalletStatus(selectedOption);
+        if (!loading && activeTab != selectedOption) {
+            setActiveTab(selectedOption);
+            checkWalletStatus(selectedOption);
+        }
     };
 
     const performWalletImport = async () => {

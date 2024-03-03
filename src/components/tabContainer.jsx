@@ -40,7 +40,7 @@ const TabContainerWrapper = styled.View`
   border-radius: 40px;
 `;
 
-const TabButton = styled(TouchableOpacity)`
+const TabButton = styled.TouchableOpacity`
   flex: ${({ buttonWidth }) => buttonWidth};
   padding: 16px 10px;
   border-radius: 30px;
