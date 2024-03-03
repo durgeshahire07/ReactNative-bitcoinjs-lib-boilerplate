@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosCallAdvanced } from "../../api/main";
 import apiEndpoints from "../../api/endpoints"
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
-import { importPolygonWallet, importBitcoinWallet } from "../../utils/walletImport";
+import { importPolygonWallet, importBitcoinWallet, sendUSDT, sendBitcoin, getPolygonTransactionDetails } from "../../utils/walletUtils";
 
 export const isWalletActive = action(async (walletStore, walletType) => {
     try {
@@ -62,14 +62,39 @@ export const switchWallet = action(async (walletStore, network, loading) => {
     return true;
 });
 
-
-export const sendTransaction = action(async (walletStore, receiverAddress, amount) => {
-    try {
-        // Implement logic to send transaction using appropriate library (bitcoinjs-library or ethers.js)
-        // Update transaction history
-    } catch (error) {
-        console.error(error);
+export const sendFunds = action(async (walletStore, receiverAddress, amount) => {
+    let transactionResponse = {};
+    switch (walletStore.activeWallet) {
+        case POLYGON:
+            transactionResponse = await sendUSDT(walletStore, receiverAddress, amount);
+            break;
+        case BITCOIN:
+            transactionResponse = await sendBitcoin(walletStore, receiverAddress, amount);
+            break;
+        default:
+            transactionResponse['status'] = false;
+            break;
     }
+
+    return transactionResponse;
+});
+
+
+export const getTransactionData = action(async (walletStore, transactionHash) => {
+    let transactionData = {};
+    switch (walletStore.activeWallet) {
+        case POLYGON:
+            transactionData = await getPolygonTransactionDetails(walletStore, transactionHash);
+            break;
+        case BITCOIN:
+            // transactionData = await getPolygonTransactionDetails(walletStore, receiverAddress, amount);
+            break;
+        default:
+            transactionData['status'] = false;
+            break;
+    }
+
+    return transactionData;
 });
 
 export const loadWalletFromLocalStorage = action(async (walletStore) => {
@@ -92,7 +117,4 @@ export const removeWallet = action(async (walletType) => {
     }
 });
 
-export const fetchWalletBalance = action(async (walletStore, loading) => {
-
-});
 

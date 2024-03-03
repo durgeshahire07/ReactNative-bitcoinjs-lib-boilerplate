@@ -1,10 +1,16 @@
 import React from "react";
 import styled from "styled-components/native";
+import { ActivityIndicator } from "react-native";
 
-const PrimaryButton = ({ onPress, text }) => {
+const PrimaryButton = ({ onPress, text, showLoader }) => {
   return (
-    <ButtonContainer onPress={onPress}>
-      <ButtonText>{text}</ButtonText>
+    <ButtonContainer onPress={showLoader ? null : onPress}>
+      {
+        showLoader ?
+          <ActivityIndicator size="small" color="#fff" />
+          :
+          <ButtonText>{text}</ButtonText>
+      }
     </ButtonContainer>
   );
 };

@@ -61,9 +61,11 @@ const InputContainer = styled.View`
     align-items: center;
 `;
 
+//to add padding-left only for eye icon
 const StyledTextInput = styled.TextInput`
     flex: 1;
     padding: 16px 16px 16px 16px;
+    padding-right: 50px;
     border-radius: 30px;
     border: 1px solid ${({ error }) => (error ? "red" : "#ccc")};
 `;

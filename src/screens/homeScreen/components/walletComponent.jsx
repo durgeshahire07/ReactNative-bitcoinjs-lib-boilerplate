@@ -10,7 +10,7 @@ const WalletComponent = ({ walletFetch }) => {
   const navigation = useNavigation();
 
   const handleSendFundPress = () => {
-    navigation.navigate("SendFunds")
+    navigation.navigate("SendFundScreen")
   }
 
   const handleRemoveWallet = async () => {

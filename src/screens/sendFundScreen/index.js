@@ -5,20 +5,31 @@ import walletStore from "../../store/wallet/walletStore";
 import LabeledInput from "../../components/labeledInput";
 import PrimaryButton from "../../components/primaryButton";
 import { canTransferFunds, isValidPolygonAddress } from "../../utils/stringValidation";
+import { useNavigation } from "@react-navigation/native";
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
 
 const SendFunds = () => {
     const [receiverAddress, setReceiverAddress] = useState("");
     const [recieverAddressError, setRecieverAddressError] = useState("");
-
     const [amount, setAmount] = useState("");
     const [amountError, setAmountError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
 
     const handleButtonPress = async () => {
-        //TO UNCOMMENT
-        // if (!validateReciverAddress() && !validateAmount()) {
-        //     return;
-        // }
+
+        if (!validateReciverAddress() && !validateAmount()) {
+            return;
+        }
+        setLoading(true);
+        const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
+        setLoading(false);
+        if (transaction.status) {
+            navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
+        }
+        else {
+            Alert.alert("Transaction Failed", transaction.errorMessage)
+        }
     };
 
     const validateReciverAddress = () => {
@@ -89,7 +100,7 @@ const SendFunds = () => {
                 <BalanceText>Available Balance: {walletStore.balance}</BalanceText>
             </BalanceTextContainer>
 
-            <PrimaryButton onPress={handleButtonPress} text="Send Funds" />
+            <PrimaryButton onPress={handleButtonPress} text="Send Funds" showLoader={loading} />
         </SendFundsComponent>
     );
 };
