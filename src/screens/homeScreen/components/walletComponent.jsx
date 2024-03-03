@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import styled from "styled-components/native";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons"; // Assuming you are using Expo for icons
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import walletStore from "../../../store/wallet/walletStore";
 
 const WalletComponent = ({ walletFetch }) => {
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  const handleSendFundPress = () => {
+    navigation.navigate("SendFunds")
+  }
+
   const handleRemoveWallet = async () => {
     const walletRemoved = await walletStore.removeWallet(walletStore.activeWallet);
     if (walletRemoved) {
@@ -40,7 +47,7 @@ const WalletComponent = ({ walletFetch }) => {
 
       <ButtonRow>
         <ButtonContainer>
-          <Button>
+          <Button onPress={handleSendFundPress}>
             <AntDesign name="arrowup" size={30} color="#4ba3eb" />
           </Button>
           <ButtonText>Send</ButtonText>

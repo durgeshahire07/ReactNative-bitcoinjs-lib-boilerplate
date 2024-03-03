@@ -17,7 +17,7 @@ const ImportWallet = ({ updateFetchWallet }) => {
     if (!validateInput()) {
       return;
     }
-    else{
+    else {
       updateFetchWallet({ state: true, key: enteredPrivateKey });
     }
   };
@@ -38,8 +38,10 @@ const ImportWallet = ({ updateFetchWallet }) => {
   };
 
   const handlePrivateKeyInput = (text) => {
+    if (inputError) {
+      setInputError("");
+    }
     setEnteredPrivateKey(text);
-    setInputError("");
   }
 
   return (

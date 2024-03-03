@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { BitcoinJS } from 'bitcoinjs-lib';
+import BitcoinJS from 'bitcoinjs-lib';
 import { isPolygonPrivateKeyValid } from './stringValidation';
 import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,7 +26,7 @@ export const importPolygonWallet = async (walletStore, privateKey) => {
             return true;
         }
         catch (err) {
-            console.log("error importing wallet", err)
+            console.log("error importing polygon wallet", err)
             return false;
         }
 
@@ -36,16 +36,15 @@ export const importPolygonWallet = async (walletStore, privateKey) => {
     }
 }
 
-export const importBitcoinWallet = async () => {
+export const importBitcoinWallet = async (walletStore, privateKey) => {
     try {
         const network = BitcoinJS.networks.testnet; // Use testnet network
-        const keyPair = BitcoinJS.ECPair.fromWIF(privateKey, network);
+        // const keyPair = BitcoinJS.ECPair.fromWIF(privateKey, network);
+        // const address = keyPair.getAddress();p
 
-        // Perform wallet operations here (e.g., get balance)
+        
 
-        // **Important:** Clear the private key after usage
-        privateKey = null;
     } catch (error) {
-        console.error('Error importing wallet:', error);
+        console.error('error importing bitcoin wallet:', error);
     }
 }

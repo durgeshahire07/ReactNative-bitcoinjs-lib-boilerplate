@@ -1,6 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/homeScreen";
+import SendFunds from "../screens/sendFunds";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,7 +12,14 @@ const Routes = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: "CryptoWallet", 
+          headerTitle: "CryptoWallet",
+        }}
+      />
+      <Stack.Screen
+        name="SendFunds"
+        component={SendFunds}
+        options={{
+          headerTitle: "Send Funds",
         }}
       />
       {/* Add other routes as needed */}
