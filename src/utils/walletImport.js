@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { BitcoinJS } from 'bitcoinjs-lib';
 import { isPolygonPrivateKeyValid } from './stringValidation';
 import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
