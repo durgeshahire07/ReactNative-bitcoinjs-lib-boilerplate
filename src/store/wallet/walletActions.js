@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosCallAdvanced } from "../../api/main";
 import apiEndpoints from "../../api/endpoints"
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
-import { importPolygonWallet, importBitcoinWallet, sendUSDT, sendBitcoin, getPolygonTransactionDetails } from "../../utils/walletUtils";
+import { importPolygonWallet, importBitcoinWallet, sendUSDT, sendBitcoin, getPolygonTransactionDetails} from "../../utils/walletUtils";
 
 export const isWalletActive = action(async (walletStore, walletType) => {
     try {

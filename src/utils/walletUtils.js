@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 import { isPolygonPrivateKeyValid } from './stringValidation';
 import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import walletStore from '../store/wallet/walletStore';
 
 const Erc20Abi = require('../assets/jsonData/erc20.json')
 
@@ -102,10 +101,28 @@ export const sendBitcoin = async (walletStore, recieverAddress, amount) => {
 
 export const getPolygonTransactionDetails = async (walletStore, transactionHash) => {
     try {
+        console.log("inside get details")
         const provider = new ethers.AlchemyProvider(POLYGON_TESTNET_CODE, ALCHEMY_API_KEY);
         const txReceipt = await provider.getTransaction(transactionHash)
         console.log("tx reciept===>", txReceipt)
+        if (txReceipt) {
+            return {
+                status: true,
+                to: txReceipt.to,
+                from: txReceipt.from,
+                gasFee:  `${ethers.formatEther(txReceipt.gasPrice)} MATIC`,
+                amount: `${ethers.formatEther(txReceipt.value)} MATIC`
+            }
+        }
+        return {
+            status: false,
+            errorMessage: "Something went wrong"
+        };
     } catch (err) {
         console.log("err in getting transaction details", err)
+        return {
+            status: false,
+            errorMessage: "Something went wrong"
+        };
     }
 }
