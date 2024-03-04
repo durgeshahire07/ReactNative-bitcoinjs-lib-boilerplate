@@ -19,7 +19,7 @@ const WalletComponent = ({ walletFetch }) => {
       walletFetch((prev) => !prev)
     }
     else {
-      Alert.alert("Seomthing went wrong")
+      Alert.alert("Error","Seomthing went wrong")
     }
   }
 
@@ -140,7 +140,7 @@ const ButtonContainer = styled.View`
 const Button = styled(TouchableOpacity)`
   width: 80px;
   height: 80px;
-  border-radius: 15px;
+  border-radius: 30px;
   background-color: #fff;
   align-items: center;
   justify-content: center;

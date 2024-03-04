@@ -89,8 +89,8 @@ const SendFunds = () => {
                 error={recieverAddressError}
             />
             <LabeledInput
-                label="Amount (in USDT)"
-                placeholder="Enter USDT"
+                label="Amount"
+                placeholder="Enter amount"
                 onChangeText={(text) => handleAmountInput(text)}
                 value={amount}
                 error={amountError}

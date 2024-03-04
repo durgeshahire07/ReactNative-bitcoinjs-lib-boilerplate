@@ -19,6 +19,12 @@ export const isValidCharacter = (char) => {
     return alphanumericRegex.test(char);
 }
 
+export const isValidBitcoinPrivateKey = (key) => {
+    //TODO: validation
+    return true;
+}
+
+
 export const isValidPolygonAddress = (input) => {
     // Polygon address regex pattern
     const polygonAddressRegex = /^0x[0-9a-fA-F]{40}$/;
@@ -26,6 +32,7 @@ export const isValidPolygonAddress = (input) => {
     // Check if the input matches the Polygon address pattern
     return polygonAddressRegex.test(input);
 }
+
 
 export const canTransferFunds = (walletBalance, amountToSend) => {
     // Check if the amount to send is less than or equal to the wallet balance

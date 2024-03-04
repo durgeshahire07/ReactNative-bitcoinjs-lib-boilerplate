@@ -28,9 +28,11 @@ const ImportWallet = ({ updateFetchWallet }) => {
       return false;
     }
 
-    if (!isPolygonPrivateKeyValid(enteredPrivateKey)) {
-      setInputError("Invalid key");
-      return false;
+    if (walletStore.activeWallet === POLYGON) {
+      if (!isPolygonPrivateKeyValid(enteredPrivateKey)) {
+        setInputError("Invalid key");
+        return false;
+      }
     }
 
     setInputError("");

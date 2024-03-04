@@ -2,6 +2,10 @@ import { ethers } from 'ethers';
 import { isPolygonPrivateKeyValid } from './stringValidation';
 import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { ECPair } from 'bitcoinjs-lib';
+// import ECPairFactory from 'ecpair';
+// import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs'
+import { bitcoin } from 'bitcoinjs-lib/src/networks';
 
 const Erc20Abi = require('../assets/jsonData/erc20.json')
 
@@ -82,9 +86,18 @@ export const sendUSDT = async (walletStore, recieverAddress, amount) => {
 
 export const importBitcoinWallet = async (walletStore, privateKey) => {
     try {
+        console.log("hh")
+        // return true;
+        // const k = bitcoin
+        // const net = bitcoin.
+        // const k = bitcoin
+        // const keyPair = bitcoin.ECPair.fromPrivateKey(Buffer.from('tprv8ZgxMBicQKsPczVhiNLsR6AGiWPBDqnx92yiQPAZcyaAtDJTz9zFvssnsbEKvfayjVpWB6f8XjxbWoeAzMUuAHhZmx8qmJfJGL4VKXqii4k', 'hex'));
+        // const address = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey }).address;
+        // console.log("address of bitcoin===>", address)
         // const network = BitcoinJS.networks.testnet; // Use testnet network
         // const keyPair = BitcoinJS.ECPair.fromWIF(privateKey, network);
         // const address = keyPair.getAddress();p 
+
     } catch (error) {
         console.error('error importing bitcoin wallet:', error);
     }
@@ -110,7 +123,7 @@ export const getPolygonTransactionDetails = async (walletStore, transactionHash)
                 status: true,
                 to: txReceipt.to,
                 from: txReceipt.from,
-                gasFee:  `${ethers.formatEther(txReceipt.gasPrice)} MATIC`,
+                gasFee: `${ethers.formatEther(txReceipt.gasPrice)} MATIC`,
                 amount: `${ethers.formatEther(txReceipt.value)} MATIC`
             }
         }

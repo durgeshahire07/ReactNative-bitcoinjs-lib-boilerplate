@@ -48,7 +48,7 @@ const HomeScreen = () => {
             setShowWallet(true);
         }
         else {
-            Alert.alert("Something went wrong... Try again later!")
+            Alert.alert("Error","Something went wrong... Try again later!")
         }
     }
     useEffect(() => {
