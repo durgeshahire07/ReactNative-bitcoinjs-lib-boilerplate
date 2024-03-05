@@ -9,7 +9,7 @@ import {
 import walletStore from "../../store/wallet/walletStore";
 import LabeledInput from "../../components/labeledInput";
 import PrimaryButton from "../../components/primaryButton";
-import { canTransferFunds, isValidPolygonAddress } from "../../utils/stringValidation";
+import { canTransferFunds, isValidPolygonAddress, isValidBitcoinAddress } from "../../utils/stringValidation";
 import { useNavigation } from "@react-navigation/native";
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
 
@@ -22,16 +22,31 @@ const SendFunds = () => {
   const navigation = useNavigation();
 
   const handleButtonPress = async () => {
-    if (!validateReciverAddress() && !validateAmount()) {
-      return;
+
+    if (walletStore.activeWallet === POLYGON) {
+      //remove above condition later on
+      if (!validateReciverAddress() || !validateAmount()) {
+        return;
+      }
+      setLoading(true);
+      const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
+      setLoading(false);
+      if (transaction.status) {
+        navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
+      } else {
+        Alert.alert("Transaction Failed", transaction.errorMessage)
+      }
     }
+    else {
     setLoading(true);
-    const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
-    setLoading(false);
-    if (transaction.status) {
-      navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
-    } else {
-      Alert.alert("Transaction Failed", transaction.errorMessage)
+
+      const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
+      setLoading(false);
+      if (transaction.status) {
+        navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
+      } else {
+        Alert.alert("Transaction Failed", transaction.errorMessage)
+      }
     }
   };
 
@@ -41,9 +56,17 @@ const SendFunds = () => {
       return false;
     }
 
-    if (!isValidPolygonAddress(receiverAddress)) {
-      setRecieverAddressError("Invalid address");
-      return false;
+    if (walletStore.activeWallet === POLYGON) {
+      if (!isValidPolygonAddress(receiverAddress)) {
+        setRecieverAddressError("Invalid address");
+        return false;
+      }
+    }
+    if (walletStore.activeWallet === BITCOIN) {
+      if (!isValidBitcoinAddress(receiverAddress)) {
+        setRecieverAddressError("Invalid address");
+        return false;
+      }
     }
 
     setRecieverAddressError("");
@@ -86,7 +109,7 @@ const SendFunds = () => {
     <ScrollView style={styles.sendFundsComponent}>
       <LabeledInput
         label="Enter reciever's address"
-        placeholder="Enter public address (0x)"
+        placeholder={walletStore.activeWallet === BITCOIN ? "Enter public BTC Tesetnet address" : "Enter public mumbai address (0x)"}
         onChangeText={(text) => handleReciverAddressInput(text)}
         value={receiverAddress}
         error={recieverAddressError}

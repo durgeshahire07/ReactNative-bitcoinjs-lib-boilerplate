@@ -20,7 +20,13 @@ export const isValidCharacter = (char) => {
 }
 
 export const isValidBitcoinPrivateKey = (key) => {
-    //TODO: validation
+    // Convert the private key to a buffer
+    // const keyBuffer = Buffer.from(key, 'hex');
+
+    // // Check if the buffer length is 32 bytes (valid private key length)
+    // if (keyBuffer.length !== 32) {
+    //     return false;
+    // }
     return true;
 }
 
@@ -31,6 +37,11 @@ export const isValidPolygonAddress = (input) => {
 
     // Check if the input matches the Polygon address pattern
     return polygonAddressRegex.test(input);
+}
+
+export const isValidBitcoinAddress = (input) => {
+    //todo: check bitcoin address
+    return true;
 }
 
 

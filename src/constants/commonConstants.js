@@ -14,3 +14,4 @@ export const BITCOIN_STORAGE_KEY="bitcoinPrivateKey"
 
 //keys
 export const ALCHEMY_API_KEY="v__tED_f4Ncl-dB56BY1XeaHQldWu5VH"
+export const CRYPTO_API_KEY="aeb7543916d86664efde034902f72fa4709aa3c6"
