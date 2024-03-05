@@ -151,7 +151,7 @@ export const sendBitcoinToReciever = async (
         const { address } = Bitcoin.payments.p2wpkh({ pubkey: keyPair.publicKey, network: NETWORK });
         // const satoshiToSend = amountToSend * 100000000;
         // 10000 sat = 0.0001 btc
-        const satoshiToSend = 10000 * 100000000;
+        const satoshiToSend = 0.0001 * 100000000;
 
         let fee = 0;
         let inputCount = 0;

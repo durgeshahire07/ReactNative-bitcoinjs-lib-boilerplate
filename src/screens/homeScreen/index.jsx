@@ -97,7 +97,7 @@ const HomeScreen = () => {
         </View>
       )}
 
-      {/* <CurrencyPrice /> */}
+      <CurrencyPrice />
     </ScrollView>
   );
 };

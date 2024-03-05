@@ -71,7 +71,7 @@ const ImportWallet = ({ updateFetchWallet }) => {
         value={enteredPrivateKey}
         error={inputError}
       />
-      <PrimaryButton onPress={handleButtonPress} text="Import Wallet" />
+      <PrimaryButton onPress={() => handleButtonPress} text="Import Wallet" />
     </View>
   );
 };

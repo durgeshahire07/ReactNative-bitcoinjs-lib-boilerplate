@@ -6,11 +6,12 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import { Foundation } from "@expo/vector-icons";
 import walletStore from "../../../store/wallet/walletStore";
 import cryptoStore from "../../../store/crypto/cryptoStore";
-import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
-import { Foundation } from "@expo/vector-icons";
+import { BITCOIN, POLYGON, BTC } from "../../../constants/commonConstants";
 
 const CurrencyPrice = () => {
   const [cryptoValue, setCryptoValue] = useState("--");
@@ -19,7 +20,7 @@ const CurrencyPrice = () => {
 
   const fetchCryptoVal = async () => {
     try {
-      let res = await cryptoStore.fetchValue();
+      let res = await cryptoStore.fetchValue(walletStore.activeWallet);
       if (res) {
         setCryptoValue(cryptoStore.value);
         setLastUpdate(new Date().toLocaleTimeString());
@@ -45,6 +46,11 @@ const CurrencyPrice = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.hrContainer}>
+        <View style={styles.hrLine}></View>
+        <Text style={styles.hrText}>Live Price</Text>
+        <View style={styles.hrLine}></View>
+      </View>
       {walletStore.activeWallet === BITCOIN && (
         <>
           <View style={styles.imageContainer}>
@@ -54,7 +60,7 @@ const CurrencyPrice = () => {
               resizeMode="cover"
             />
           </View>
-          <Text style={styles.currencyText}>Bitcoin (BTC)</Text>
+          <Text style={styles.currencyText}>{BITCOIN.toUpperCase()} {BTC}</Text>
         </>
       )}
       {walletStore.activeWallet === POLYGON && (
@@ -66,7 +72,7 @@ const CurrencyPrice = () => {
               resizeMode="cover"
             />
           </View>
-          <Text style={styles.currencyText}>USDT</Text>
+          <Text style={styles.currencyText}>{POLYGON.toUpperCase()}</Text>
         </>
       )}
       {loading ? (
@@ -95,7 +101,23 @@ const CurrencyPrice = () => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 0,
+    marginVertical: 50,
+  },
+  hrContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 50,
+    marginHorizontal: 20
+  },
+  hrLine: {
+    flex: 1,
+    height: 1.5,
+    backgroundColor: "#c9c9c9",
+  },
+  hrText: {
+    marginHorizontal: 10,
+    fontSize: 16,
+    color: "#8d8d8d",
   },
   imageContainer: {
     width: 60,
@@ -119,6 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     textAlign: "center",
     fontWeight: "bold",
+    marginRight: 10
   },
   rowContainer: {
     flexDirection: "row",

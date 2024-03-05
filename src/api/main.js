@@ -3,7 +3,7 @@ import axios from 'axios';
 export const axiosCallAdvanced = async ({
     baseURL,
     method = 'get',
-    body,
+    body = {},
 }) => {
     
     try {
@@ -15,7 +15,6 @@ export const axiosCallAdvanced = async ({
             data: body,
             headers: {
                 'Content-Type': 'application/json',
-                // Authorization: storedToken,
             },
         });
 
