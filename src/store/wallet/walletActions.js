@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosCallAdvanced } from "../../api/main";
 import apiEndpoints from "../../api/endpoints"
 import { BITCOIN, POLYGON } from "../../constants/commonConstants";
-import { importPolygonWallet, importBitcoinWallet, sendUSDT, sendBitcoin, getPolygonTransactionDetails} from "../../utils/walletUtils";
+import { importPolygonWallet, importBitcoinWallet, sendMaticToReciever, sendBitcoinToReciever, getPolygonTransactionDetails} from "../../utils/walletUtils";
 
 export const isWalletActive = action(async (walletStore, walletType) => {
     try {
@@ -66,10 +66,10 @@ export const sendFunds = action(async (walletStore, receiverAddress, amount) => 
     let transactionResponse = {};
     switch (walletStore.activeWallet) {
         case POLYGON:
-            transactionResponse = await sendUSDT(walletStore, receiverAddress, amount);
+            transactionResponse = await sendMaticToReciever(walletStore, receiverAddress, amount);
             break;
         case BITCOIN:
-            transactionResponse = await sendBitcoin(walletStore, receiverAddress, amount);
+            transactionResponse = await sendBitcoinToReciever(walletStore, receiverAddress, amount);
             break;
         default:
             transactionResponse['status'] = false;

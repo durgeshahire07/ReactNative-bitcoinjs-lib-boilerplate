@@ -9,7 +9,7 @@ import PrimaryButton from "../../../components/primaryButton";
 import walletStore from "../../../store/wallet/walletStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 import { Wallet } from 'ethers';
-import { isPolygonPrivateKeyValid } from "../../../utils/stringValidation";
+import { isPolygonPrivateKeyValid, isValidBitcoinPrivateKey } from "../../../utils/stringValidation";
 
 const ImportWallet = ({ updateFetchWallet }) => {
 
@@ -34,6 +34,13 @@ const ImportWallet = ({ updateFetchWallet }) => {
 
     if (walletStore.activeWallet === POLYGON) {
       if (!isPolygonPrivateKeyValid(enteredPrivateKey)) {
+        setInputError("Invalid key");
+        return false;
+      }
+    }
+
+    if (walletStore.activeWallet === BITCOIN) {
+      if (!isValidBitcoinPrivateKey(enteredPrivateKey)) {
         setInputError("Invalid key");
         return false;
       }

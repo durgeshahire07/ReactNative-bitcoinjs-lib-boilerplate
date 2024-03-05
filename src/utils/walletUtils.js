@@ -1,12 +1,11 @@
 import { ethers } from 'ethers';
-import { isPolygonPrivateKeyValid } from './stringValidation';
-import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
+import { isPolygonPrivateKeyValid, isValidBitcoinPrivateKey } from './stringValidation';
+import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY, BITCOIN_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { ECPair } from 'bitcoinjs-lib';
 import ECPairFactory from 'ecpair';
-// import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
-// import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs'
-import { bitcoin } from 'bitcoinjs-lib/src/networks';
+import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs'
+import * as Bitcoin from 'bitcoinjs-lib';
+import axios from 'axios';
 
 const Erc20Abi = require('../assets/jsonData/erc20.json')
 
@@ -41,7 +40,49 @@ export const importPolygonWallet = async (walletStore, privateKey) => {
     }
 }
 
-export const sendUSDT = async (walletStore, recieverAddress, amount) => {
+export const importBitcoinWallet = async (walletStore, privateKey) => {
+    try {
+        const privateKey = "cVJ7Ud75MWwsjtTt5wgdHZtuNcnZGMwDFxTyz8FmN4Sa8cq5oSv5";
+
+        if (isValidBitcoinPrivateKey(privateKey)) {
+            const NETWORK = Bitcoin.networks.testnet;
+
+            const ECPair = ECPairFactory(ecc);
+
+            const keyPair = ECPair.fromWIF(privateKey, NETWORK)
+
+            const { address } = Bitcoin.payments.p2wpkh({ pubkey: keyPair.publicKey, network: NETWORK });
+
+            const publicKey = keyPair.publicKey.toString('hex');
+            const privateKeyWif = keyPair.toWIF();
+
+            const result = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=50`)
+            let balanceInSatoshis = result.data.final_balance;
+            const balanceInBTC = balanceInSatoshis / 100000000;
+            
+            //updating store values
+            walletStore.privateKey = privateKey;
+            walletStore.activeWallet = BITCOIN;
+            walletStore.address = address;
+            walletStore.balance = balanceInBTC;
+
+            //storing key in storage
+            await AsyncStorage.setItem(BITCOIN_STORAGE_KEY, privateKey);
+
+           
+            return true;
+        }
+        else {
+            return false;
+        }
+
+
+    } catch (error) {
+        console.error('error importing bitcoin wallet:', error);
+    }
+}
+
+export const sendMaticToReciever = async (walletStore, recieverAddress, amount) => {
     try {
         const provider = new ethers.AlchemyProvider(POLYGON_TESTNET_CODE, ALCHEMY_API_KEY);
 
@@ -85,28 +126,8 @@ export const sendUSDT = async (walletStore, recieverAddress, amount) => {
     }
 }
 
-export const importBitcoinWallet = async (walletStore, privateKey) => {
-    try {
-        console.log("hh");
-        // const k = ECPairFactory.
-        // return true;
-        // const k = bitcoin
-        // const net = bitcoin.
-        // const k = bitcoin
-        // const k = ECPairFactory.
-        // const keyPair = ECPairFactory.fromPrivateKey(Buffer.from('tprv8ZgxMBicQKsPczVhiNLsR6AGiWPBDqnx92yiQPAZcyaAtDJTz9zFvssnsbEKvfayjVpWB6f8XjxbWoeAzMUuAHhZmx8qmJfJGL4VKXqii4k', 'hex'));
-        // const address = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey }).address;
-        // console.log("address of bitcoin===>", address)
-        // const network = BitcoinJS.networks.testnet; // Use testnet network
-        // const keyPair = BitcoinJS.ECPair.fromWIF(privateKey, network);
-        // const address = keyPair.getAddress();p 
 
-    } catch (error) {
-        console.error('error importing bitcoin wallet:', error);
-    }
-}
-
-export const sendBitcoin = async (walletStore, recieverAddress, amount) => {
+export const sendBitcoinToReciever = async (walletStore, recieverAddress, amount) => {
     try {
 
     }
