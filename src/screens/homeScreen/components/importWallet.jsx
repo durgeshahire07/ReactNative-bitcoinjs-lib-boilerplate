@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import styled from "styled-components/native";
+import {
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
 import LabeledInput from "../../../components/labeledInput";
 import PrimaryButton from "../../../components/primaryButton";
 import walletStore from "../../../store/wallet/walletStore";
@@ -47,12 +51,12 @@ const ImportWallet = ({ updateFetchWallet }) => {
   }
 
   return (
-    <Container>
-      <TextContainer>
-        <MessageText>
+    <View style={styles.container}>
+      <View style={styles.textContainer}>
+        <Text style={styles.messageText}>
           Please import your {activeWalletName} wallet
-        </MessageText>
-      </TextContainer>
+        </Text>
+      </View>
       <LabeledInput
         placeholder="Enter Private Key"
         secureTextEntry={true}
@@ -61,21 +65,21 @@ const ImportWallet = ({ updateFetchWallet }) => {
         error={inputError}
       />
       <PrimaryButton onPress={handleButtonPress} text="Import Wallet" />
-    </Container>
+    </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    /* flex: 1; */
+  },
+  textContainer: {
+    alignItems: "center",
+  },
+  messageText: {
+    marginBottom: 20,
+    fontSize: 18,
+  },
+});
+
 export default ImportWallet;
-
-const Container = styled.View`
-  /* flex: 1; */
-`;
-
-const TextContainer = styled.View`
-  align-items: center;
-`
-
-const MessageText = styled.Text`
-  margin-bottom: 20px;
-  font-size: 18px;
-`;

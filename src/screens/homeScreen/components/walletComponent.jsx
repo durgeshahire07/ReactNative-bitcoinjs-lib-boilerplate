@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
-import styled from "styled-components/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import walletStore from "../../../store/wallet/walletStore";
@@ -10,149 +15,132 @@ const WalletComponent = ({ walletFetch }) => {
   const navigation = useNavigation();
 
   const handleSendFundPress = () => {
-    navigation.navigate("SendFundScreen")
-  }
+    navigation.navigate("SendFundScreen");
+  };
 
   const handleRemoveWallet = async () => {
-    const walletRemoved = await walletStore.removeWallet(walletStore.activeWallet);
+    const walletRemoved = await walletStore.removeWallet(
+      walletStore.activeWallet
+    );
     if (walletRemoved) {
-      walletFetch((prev) => !prev)
+      walletFetch((prev) => !prev);
+    } else {
+      Alert.alert("Error", "Something went wrong");
     }
-    else {
-      Alert.alert("Error","Seomthing went wrong")
-    }
-  }
+  };
 
   useEffect(() => {
-    // console.log(walletStore.balance)
     // Your additional setup logic if needed
   }, []);
 
   return (
-    <Container>
-      <WalletContainer>
-        <HeaderText>{walletStore.activeWallet} Wallet</HeaderText>
+    <View style={styles.container}>
+      <View style={styles.walletContainer}>
+        <Text style={styles.headerText}>
+          {walletStore.activeWallet} Wallet
+        </Text>
 
-        <BalanceContainer>
-          <BalanceLabel>Wallet Balance</BalanceLabel>
-          <BalanceAmount>{walletStore.balance}</BalanceAmount>
-        </BalanceContainer>
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceLabel}>Wallet Balance</Text>
+          <Text style={styles.balanceAmount}>{walletStore.balance}</Text>
+        </View>
 
-        <AddressContainer>
-          <AddressLabel>Wallet Address:</AddressLabel>
-          <AddressText>{walletStore.address}</AddressText>
-        </AddressContainer>
+        <View style={styles.addressContainer}>
+          <Text style={styles.addressLabel}>Wallet Address:</Text>
+          <Text style={styles.addressText}>{walletStore.address}</Text>
+        </View>
+      </View>
 
-      </WalletContainer>
-
-      <ButtonRow>
-        <ButtonContainer>
-          <Button onPress={handleSendFundPress}>
+      <View style={styles.buttonRow}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleSendFundPress} style={styles.button}>
             <AntDesign name="arrowup" size={30} color="#4ba3eb" />
-          </Button>
-          <ButtonText>Send</ButtonText>
-
-        </ButtonContainer>
-        <ButtonContainer>
-          <Button>
+          </TouchableOpacity>
+          <Text style={styles.buttonText}>Send</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button}>
             <MaterialIcons name="history" size={30} color="#4ba3eb" />
-          </Button>
-          <ButtonText>History</ButtonText>
-
-        </ButtonContainer>
-        <ButtonContainer>
-          <Button onPress={handleRemoveWallet}>
+          </TouchableOpacity>
+          <Text style={styles.buttonText}>History</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleRemoveWallet} style={styles.button}>
             <MaterialIcons name="delete" size={30} color="#f37a7a" />
-          </Button>
-          <ButtonText>Remove</ButtonText>
-        </ButtonContainer>
-
-      </ButtonRow>
-    </Container>
+          </TouchableOpacity>
+          <Text style={styles.buttonText}>Remove</Text>
+        </View>
+      </View>
+    </View>
   );
 };
-//if no styles to be given then add React.Fragments later
-const Container = styled.View`
-flex: 1;
-/* align-items: center; */
-`
 
-const WalletContainer = styled.View`
-  width: 100%;
-  height: 300px;
-  border-radius: 20px;
-  background-color: #3498db;
-  overflow: hidden;
-  padding: 20px;
-  align-self: center;
-  justify-content: space-between;
-`;
-
-const HeaderText = styled.Text`
-  color: #fff;
-  font-size: 18px;
-  margin-bottom: 10px;
-`;
-
-const BalanceContainer = styled.View`
-  align-items: center;
-`;
-
-const BalanceLabel = styled.Text`
-  color: #fff;
-  font-size: 16px;
-  margin-bottom: 5px;
-`;
-
-const BalanceAmount = styled.Text`
-  color: #fff;
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 20px;
-`;
-
-const AddressText = styled.Text`
-  color: #fff;
-  font-size: 16px;
-`;
-
-const AddressContainer = styled.View`
-  
-`
-
-const AddressLabel = styled.Text`
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-`
-
-const ButtonRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 20px;
-  /* width: 100%; */
-`;
-
-const ButtonContainer = styled.View`
-  text-align: center;
-  align-items: center;
-`
-const Button = styled(TouchableOpacity)`
-  width: 80px;
-  height: 80px;
-  border-radius: 30px;
-  background-color: #fff;
-  align-items: center;
-  justify-content: center;
-
-  /* For Android */
-  elevation: 5;
-`;
-
-const ButtonText = styled.Text`
-  color: #696969;
-  margin-top: 10px;
-  font-size: 14px;
-`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  walletContainer: {
+    width: "100%",
+    height: 300,
+    borderRadius: 20,
+    backgroundColor: "#3498db",
+    overflow: "hidden",
+    padding: 20,
+    alignSelf: "center",
+    justifyContent: "space-between",
+  },
+  headerText: {
+    color: "#fff",
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  balanceContainer: {
+    alignItems: "center",
+  },
+  balanceLabel: {
+    color: "#fff",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  balanceAmount: {
+    color: "#fff",
+    fontSize: 30,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  addressContainer: {},
+  addressLabel: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  addressText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: 20,
+  },
+  buttonContainer: {
+    textAlign: "center",
+    alignItems: "center",
+  },
+  button: {
+    width: 80,
+    height: 80,
+    borderRadius: 30,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 5, // For Android
+  },
+  buttonText: {
+    color: "#696969",
+    marginTop: 10,
+    fontSize: 14,
+  },
+});
 
 export default WalletComponent;

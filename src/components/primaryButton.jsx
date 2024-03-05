@@ -1,32 +1,34 @@
 import React from "react";
-import styled from "styled-components/native";
-import { ActivityIndicator } from "react-native";
+import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from "react-native";
 
 const PrimaryButton = ({ onPress, text, showLoader }) => {
   return (
-    <ButtonContainer onPress={showLoader ? null : onPress}>
-      {
-        showLoader ?
-          <ActivityIndicator size="small" color="#fff" />
-          :
-          <ButtonText>{text}</ButtonText>
-      }
-    </ButtonContainer>
+    <TouchableOpacity
+      style={styles.buttonContainer}
+      onPress={showLoader ? null : onPress}
+    >
+      {showLoader ? (
+        <ActivityIndicator size="small" color="#fff" />
+      ) : (
+        <Text style={styles.buttonText}>{text}</Text>
+      )}
+    </TouchableOpacity>
   );
 };
 
 export default PrimaryButton;
 
-const ButtonContainer = styled.TouchableOpacity`
-  width: 100%;
-  padding: 15px;
-  border-radius: 30px;
-  background-color: #3498db;
-`;
-
-const ButtonText = styled.Text`
-  color: #fff;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-`;
+const styles = StyleSheet.create({
+  buttonContainer: {
+    width: "100%",
+    padding: 15,
+    borderRadius: 30,
+    backgroundColor: "#3498db",
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});

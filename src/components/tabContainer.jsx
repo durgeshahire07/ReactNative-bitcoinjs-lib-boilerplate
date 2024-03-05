@@ -1,10 +1,8 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import styled from "styled-components/native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { PRIMARY_COLOR, WHITE_COLOR } from "../constants/commonConstants";
 
 const TabContainer = ({ options, onTabPress, activeTab, ...props }) => {
-
   const calculateButtonWidth = () => {
     const buttonWidth = 100 / options.length;
     return `${buttonWidth}%`;
@@ -15,40 +13,56 @@ const TabContainer = ({ options, onTabPress, activeTab, ...props }) => {
   };
 
   return (
-    <TabContainerWrapper {...props}>
+    <View style={[styles.tabContainerWrapper, props.style]}>
       {options.map((option) => (
-        <TabButton
+        <TouchableOpacity
           key={option}
-          isSelected={activeTab === option}
+          style={[
+            styles.tabButton,
+            {
+              backgroundColor: activeTab === option ? 'white' : 'transparent',
+            },
+          ]}
           onPress={() => handleTabPress(option)}
-          buttonWidth={calculateButtonWidth()}
         >
-          <TabText isSelected={activeTab === option}>{option}</TabText>
-        </TabButton>
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: activeTab === option ? "black" : "black",
+                fontWeight: activeTab === option ? "bold" : "normal",
+              },
+            ]}
+          >
+            {option}
+          </Text>
+        </TouchableOpacity>
       ))}
-    </TabContainerWrapper>
+    </View>
   );
 };
 
 export default TabContainer;
 
-const TabContainerWrapper = styled.View`
-  width: 100%;
-  flex-direction: row;
-  padding: 5px;
-  background-color: #dcdcdcc7; 
-  border-radius: 40px;
-`;
-
-const TabButton = styled.TouchableOpacity`
-  flex: ${({ buttonWidth }) => buttonWidth};
-  padding: 16px 10px;
-  border-radius: 30px;
-  background-color: ${({ isSelected }) => (isSelected ? 'white' : "transparent")}; 
-`;
-
-const TabText = styled.Text`
-  text-align: center;
-  color: ${({ isSelected }) => (isSelected ? "black" : "black")}; 
-  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
-`
+const styles = StyleSheet.create({
+  tabContainerWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    padding: 5,
+    backgroundColor: "#dcdcdcc7",
+    borderRadius: 40,
+  },
+  tabButton: {
+    flex: 1, // Use flex: 1 to take the available space evenly
+    padding: 16,
+    borderRadius: 30,
+    justifyContent: "center", // Center the content vertically
+    alignItems: "center", // Center the content horizontally
+    backgroundColor: "transparent", // Set a default background color
+  },
+  tabText: {
+    textAlign: "center",
+    color: "black",
+    fontWeight: "normal",
+  },
+});

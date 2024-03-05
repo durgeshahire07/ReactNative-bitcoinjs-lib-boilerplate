@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, Button } from "react-native";
-import styled from "styled-components/native";
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import walletStore from "../../../store/wallet/walletStore";
-import cryptoStore from "../../../store/crypto/cryptoStore"
+import cryptoStore from "../../../store/crypto/cryptoStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
 import { Foundation } from "@expo/vector-icons";
 
 const CurrencyPrice = () => {
-  const [cryptoValue, setCryptoValue] = useState('--');
+  const [cryptoValue, setCryptoValue] = useState("--");
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
 
@@ -17,114 +23,115 @@ const CurrencyPrice = () => {
       if (res) {
         setCryptoValue(cryptoStore.value);
         setLastUpdate(new Date().toLocaleTimeString());
-      }
-      else {
-
+      } else {
+        // Handle error case
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleRefresh = () => {
     setLoading(true);
     fetchCryptoVal();
-  }
+  };
 
   useEffect(() => {
     setLoading(true);
     fetchCryptoVal();
   }, [walletStore.activeWallet]);
 
-
   return (
-    <Container>
+    <View style={styles.container}>
       {walletStore.activeWallet === BITCOIN && (
         <>
-          <ImageContainer>
-            <Image source={require('../../../assets/images/bitcoin.png')} resizeMode="cover" />
-          </ImageContainer>
-          <CurrencyText>Bitcoin (BTC)</CurrencyText>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../../assets/images/bitcoin.png")}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={styles.currencyText}>Bitcoin (BTC)</Text>
         </>
       )}
       {walletStore.activeWallet === POLYGON && (
         <>
-          <ImageContainer>
-            <Image source={require('../../../assets/images/polygon.png')} resizeMode="cover" />
-          </ImageContainer>
-          <CurrencyText>USDT</CurrencyText>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../../assets/images/polygon.png")}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={styles.currencyText}>USDT</Text>
         </>
       )}
-      {
-        loading ?
-          <ActivityIndicator size="large" color="#3498db" />
-          :
-          <>
-            <RowContainer>
-              <CurrentValue>{
-                cryptoStore.value ?
-                  `$${parseFloat(cryptoValue).toFixed(2)}`
-                  :
-                  '--'
-              }</CurrentValue>
-              <Foundation onPress={handleRefresh} name="refresh" size={20} color="#000000a2" />
-            </RowContainer>
-            <RowContainer>
-              <LastUpdateText>Last update:</LastUpdateText>
-              <LastUpdateText>{lastUpdate || '--'}</LastUpdateText>
-            </RowContainer>
-          </>
-      }
-
-    </Container>
+      {loading ? (
+        <ActivityIndicator size="large" color="#3498db" />
+      ) : (
+        <>
+          <View style={styles.rowContainer}>
+            <Text style={styles.currentValue}>
+              {cryptoStore.value
+                ? `$${parseFloat(cryptoValue).toFixed(2)}`
+                : "--"}
+            </Text>
+            <TouchableOpacity onPress={handleRefresh}>
+              <Foundation name="refresh" size={20} color="#000000a2" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.lastUpdateText}>Last update:</Text>
+            <Text style={styles.lastUpdateText}>{lastUpdate || "--"}</Text>
+          </View>
+        </>
+      )}
+    </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    margin: 0,
+  },
+  imageContainer: {
+    width: 60,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 0,
+    alignSelf: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  currencyText: {
+    marginTop: 10,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  currentValue: {
+    margin: 0,
+    fontSize: 26,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  lastUpdateText: {
+    fontSize: 14,
+    textAlign: "center",
+    marginRight: 5,
+    color: "grey",
+  },
+});
+
 export default CurrencyPrice;
-
-const Container = styled.View`
-  /* flex: 1;n */
-  margin: 0px 0px 50px 0px;
-`;
-
-const ImageContainer = styled.View`
-  width: 60px; 
-  height: 60px; 
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto; 
-`;
-
-const Image = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
-
-const CurrencyText = styled.Text`
-  margin-top: 10px;
-  font-size: 18px;
-  text-align: center;
-`;
-
-const CurrentValue = styled.Text`
-  margin: 0px 15px 0px 0px;
-  font-size: 26px;
-  text-align: center;
-  font-weight: bold;
-`;
-
-const RowContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-`;
-
-const LastUpdateText = styled.Text`
-  font-size: 14px;
-  text-align: center;
-  margin-right: 5px;
-  color: grey;
-`;

@@ -3,7 +3,8 @@ import { isPolygonPrivateKeyValid } from './stringValidation';
 import { POLYGON, BITCOIN, POLYGON_TESTNET_CODE, ALCHEMY_API_KEY, POLYGON_STORAGE_KEY } from '../constants/commonConstants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { ECPair } from 'bitcoinjs-lib';
-// import ECPairFactory from 'ecpair';
+import ECPairFactory from 'ecpair';
+// import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
 // import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs'
 import { bitcoin } from 'bitcoinjs-lib/src/networks';
 
@@ -86,12 +87,14 @@ export const sendUSDT = async (walletStore, recieverAddress, amount) => {
 
 export const importBitcoinWallet = async (walletStore, privateKey) => {
     try {
-        console.log("hh")
+        console.log("hh");
+        // const k = ECPairFactory.
         // return true;
         // const k = bitcoin
         // const net = bitcoin.
         // const k = bitcoin
-        // const keyPair = bitcoin.ECPair.fromPrivateKey(Buffer.from('tprv8ZgxMBicQKsPczVhiNLsR6AGiWPBDqnx92yiQPAZcyaAtDJTz9zFvssnsbEKvfayjVpWB6f8XjxbWoeAzMUuAHhZmx8qmJfJGL4VKXqii4k', 'hex'));
+        // const k = ECPairFactory.
+        // const keyPair = ECPairFactory.fromPrivateKey(Buffer.from('tprv8ZgxMBicQKsPczVhiNLsR6AGiWPBDqnx92yiQPAZcyaAtDJTz9zFvssnsbEKvfayjVpWB6f8XjxbWoeAzMUuAHhZmx8qmJfJGL4VKXqii4k', 'hex'));
         // const address = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey }).address;
         // console.log("address of bitcoin===>", address)
         // const network = BitcoinJS.networks.testnet; // Use testnet network
