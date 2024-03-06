@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,9 @@ import {
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import walletStore from "../../../store/wallet/walletStore";
+import { SEND, WALLET_BALANCE, WALLET_ADDRESS, REMOVE, HISTORY } from "../../../constants/commonConstants";
 
 const WalletComponent = ({ walletFetch }) => {
-  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleSendFundPress = () => {
@@ -29,10 +29,6 @@ const WalletComponent = ({ walletFetch }) => {
     }
   };
 
-  useEffect(() => {
-    // Your additional setup logic if needed
-  }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.walletContainer}>
@@ -41,12 +37,12 @@ const WalletComponent = ({ walletFetch }) => {
         </Text>
 
         <View style={styles.balanceContainer}>
-          <Text style={styles.balanceLabel}>Wallet Balance</Text>
+          <Text style={styles.balanceLabel}>{WALLET_BALANCE}</Text>
           <Text style={styles.balanceAmount}>{walletStore.balance}</Text>
         </View>
 
         <View style={styles.addressContainer}>
-          <Text style={styles.addressLabel}>Wallet Address:</Text>
+          <Text style={styles.addressLabel}>{WALLET_ADDRESS}</Text>
           <Text style={styles.addressText}>{walletStore.address}</Text>
         </View>
       </View>
@@ -56,19 +52,19 @@ const WalletComponent = ({ walletFetch }) => {
           <TouchableOpacity onPress={handleSendFundPress} style={styles.button}>
             <AntDesign name="arrowup" size={30} color="#4ba3eb" />
           </TouchableOpacity>
-          <Text style={styles.buttonText}>Send</Text>
+          <Text style={styles.buttonText}>{SEND}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button}>
             <MaterialIcons name="history" size={30} color="#4ba3eb" />
           </TouchableOpacity>
-          <Text style={styles.buttonText}>History</Text>
+          <Text style={styles.buttonText}>{HISTORY}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleRemoveWallet} style={styles.button}>
             <MaterialIcons name="delete" size={30} color="#f37a7a" />
           </TouchableOpacity>
-          <Text style={styles.buttonText}>Remove</Text>
+          <Text style={styles.buttonText}>{REMOVE}</Text>
         </View>
       </View>
     </View>

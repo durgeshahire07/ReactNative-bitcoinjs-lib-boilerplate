@@ -8,7 +8,6 @@ import LabeledInput from "../../../components/labeledInput";
 import PrimaryButton from "../../../components/primaryButton";
 import walletStore from "../../../store/wallet/walletStore";
 import { BITCOIN, POLYGON } from "../../../constants/commonConstants";
-import { Wallet } from 'ethers';
 import { isPolygonPrivateKeyValid, isValidBitcoinPrivateKey } from "../../../utils/stringValidation";
 
 const ImportWallet = ({ updateFetchWallet }) => {

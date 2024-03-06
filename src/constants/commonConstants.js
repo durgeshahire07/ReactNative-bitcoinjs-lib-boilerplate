@@ -8,6 +8,14 @@ export const POLYGON_TESTNET_CODE="maticmum"
 export const PRIMARY_COLOR = "#203e94"
 export const WHITE_COLOR="#fff"
 
+//strings
+export const LAST_UPDATE = "Last update:"
+export const SEND = "Send"
+export const WALLET_ADDRESS = "Wallet Address"
+export const WALLET_BALANCE= "Wallet Balance"
+export const HISTORY = "History"
+export const REMOVE = "Remove"
+
 //storage keys
 export const POLYGON_STORAGE_KEY="polygonPrivateKey"
 export const BITCOIN_STORAGE_KEY="bitcoinPrivateKey"

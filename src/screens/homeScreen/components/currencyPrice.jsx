@@ -7,11 +7,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
 import { Foundation } from "@expo/vector-icons";
 import walletStore from "../../../store/wallet/walletStore";
 import cryptoStore from "../../../store/crypto/cryptoStore";
-import { BITCOIN, POLYGON, BTC } from "../../../constants/commonConstants";
+import { BITCOIN, POLYGON, BTC, LAST_UPDATE } from "../../../constants/commonConstants";
 
 const CurrencyPrice = () => {
   const [cryptoValue, setCryptoValue] = useState("--");
@@ -25,7 +26,7 @@ const CurrencyPrice = () => {
         setCryptoValue(cryptoStore.value);
         setLastUpdate(new Date().toLocaleTimeString());
       } else {
-        // Handle error case
+        Alert.alert("Error", "Something went wrong")
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -90,7 +91,7 @@ const CurrencyPrice = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.rowContainer}>
-            <Text style={styles.lastUpdateText}>Last update:</Text>
+            <Text style={styles.lastUpdateText}>{LAST_UPDATE}</Text>
             <Text style={styles.lastUpdateText}>{lastUpdate || "--"}</Text>
           </View>
         </>
