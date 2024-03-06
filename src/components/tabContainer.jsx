@@ -21,6 +21,7 @@ const TabContainer = ({ options, onTabPress, activeTab, ...props }) => {
             styles.tabButton,
             {
               backgroundColor: activeTab === option ? 'white' : 'transparent',
+              elevation: activeTab === option ? 5 : 0
             },
           ]}
           onPress={() => handleTabPress(option)}
@@ -29,12 +30,12 @@ const TabContainer = ({ options, onTabPress, activeTab, ...props }) => {
             style={[
               styles.tabText,
               {
-                color: activeTab === option ? "black" : "black",
+                color: activeTab === option ? "black" : "grey",
                 fontWeight: activeTab === option ? "bold" : "normal",
               },
             ]}
           >
-            {option}
+            {option.toUpperCase()}
           </Text>
         </TouchableOpacity>
       ))}
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     padding: 5,
-    backgroundColor: "#dcdcdcc7",
+    backgroundColor: "#eeeeeec8",
     borderRadius: 40,
   },
   tabButton: {

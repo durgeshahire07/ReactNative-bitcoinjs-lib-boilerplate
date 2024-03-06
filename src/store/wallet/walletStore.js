@@ -3,7 +3,7 @@ import * as WalletActions from "./walletActions";
 import { BITCOIN, POLYGON, BTC, USDT } from "../../constants/commonConstants";
 
 class WalletStore {
-  @observable activeWallet = POLYGON;
+  @observable activeWallet = BITCOIN;
   @observable privateKey = null;
   @observable address = "";
   @observable balance = 0;
