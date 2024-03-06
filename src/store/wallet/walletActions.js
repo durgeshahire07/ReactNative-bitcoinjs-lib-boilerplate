@@ -1,14 +1,12 @@
 import { action } from "mobx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { axiosCallAdvanced } from "../../api/main";
-import apiEndpoints from "../../api/endpoints"
-import { BITCOIN, POLYGON } from "../../constants/commonConstants";
+import { BITCOIN, POLYGON, PRIVATE_KEY } from "../../constants/commonConstants";
 import { importPolygonWallet, importBitcoinWallet, sendMaticToReciever, sendBitcoinToReciever, getPolygonTransactionDetails} from "../../utils/walletUtils";
 
 export const isWalletActive = action(async (walletStore, walletType) => {
     try {
         walletStore.activeWallet = walletType
-        const pvtKey = await AsyncStorage.getItem(`${walletType}PrivateKey`);
+        const pvtKey = await AsyncStorage.getItem(`${walletType}${PRIVATE_KEY}`);
         if (pvtKey) {
             return {
                 status: true,
@@ -39,7 +37,7 @@ export const importWallet = action(async ({ walletStore, walletType, privateKey 
 
 export const switchWallet = action(async (walletStore, network, loading) => {
     loading(true);
-    const storedPvtKey = await AsyncStorage.getItem(`${network}PrivateKey`);
+    const storedPvtKey = await AsyncStorage.getItem(`${network}${PRIVATE_KEY}`);
     walletStore.activeWallet = network;
 
     if (!storedPvtKey) {
@@ -98,7 +96,7 @@ export const getTransactionData = action(async (walletStore, transactionHash) =>
 });
 
 export const loadWalletFromLocalStorage = action(async (walletStore) => {
-    const privateKey = await AsyncStorage.getItem(`${walletStore.activeWallet}PrivateKey`);
+    const privateKey = await AsyncStorage.getItem(`${walletStore.activeWallet}${PRIVATE_KEY}`);
     if (privateKey) {
         importWallet(walletStore, privateKey, walletStore.activeWallet);
     } else {
@@ -109,7 +107,7 @@ export const loadWalletFromLocalStorage = action(async (walletStore) => {
 
 export const removeWallet = action(async (walletType) => {
     try {
-        await AsyncStorage.removeItem(`${walletType}PrivateKey`);
+        await AsyncStorage.removeItem(`${walletType}${PRIVATE_KEY}`);
         return true;
     } catch (error) {
         console.error("error removing wallet", error);

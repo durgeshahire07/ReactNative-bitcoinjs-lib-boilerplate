@@ -11,7 +11,7 @@ import LabeledInput from "../../components/labeledInput";
 import PrimaryButton from "../../components/primaryButton";
 import { canTransferFunds, isValidPolygonAddress, isValidBitcoinAddress } from "../../utils/stringValidation";
 import { useNavigation } from "@react-navigation/native";
-import { BITCOIN, POLYGON } from "../../constants/commonConstants";
+import { AMOUNT, BITCOIN, ENTER_ADDRESS, ENTER_AMOUNT, ENTER_PUB_BTC_ADD, ENTER_PUB_POL_ADD, POLYGON, SEND_FUNDS, TRANSACTION_DETAILS_SCREEN } from "../../constants/commonConstants";
 
 const SendFunds = () => {
   const [receiverAddress, setReceiverAddress] = useState("");
@@ -32,18 +32,18 @@ const SendFunds = () => {
       const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
       setLoading(false);
       if (transaction.status) {
-        navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
+        navigation.navigate(TRANSACTION_DETAILS_SCREEN, { transactionHash: transaction.txHash })
       } else {
         Alert.alert("Transaction Failed", transaction.errorMessage)
       }
     }
     else {
-    setLoading(true);
+      setLoading(true);
 
       const transaction = await walletStore.sendFunds(walletStore, receiverAddress, amount);
       setLoading(false);
       if (transaction.status) {
-        navigation.navigate("TransactionDetailScreen", { transactionHash: transaction.txHash })
+        navigation.navigate(TRANSACTION_DETAILS_SCREEN, { transactionHash: transaction.txHash })
       } else {
         Alert.alert("Transaction Failed", transaction.errorMessage)
       }
@@ -108,15 +108,15 @@ const SendFunds = () => {
   return (
     <ScrollView style={styles.sendFundsComponent}>
       <LabeledInput
-        label="Enter reciever's address"
-        placeholder={walletStore.activeWallet === BITCOIN ? "Enter public BTC Tesetnet address" : "Enter public mumbai address (0x)"}
+        label={ENTER_ADDRESS}
+        placeholder={walletStore.activeWallet === BITCOIN ? ENTER_PUB_BTC_ADD : ENTER_PUB_POL_ADD}
         onChangeText={(text) => handleReciverAddressInput(text)}
         value={receiverAddress}
         error={recieverAddressError}
       />
       <LabeledInput
-        label="Amount"
-        placeholder="Enter amount"
+        label={AMOUNT}
+        placeholder={ENTER_AMOUNT}
         onChangeText={(text) => handleAmountInput(text)}
         value={amount}
         error={amountError}
@@ -125,7 +125,7 @@ const SendFunds = () => {
       <View style={styles.balanceTextContainer}>
         <Text style={styles.balanceText}>Available Balance: {walletStore.balance}</Text>
       </View>
-      <PrimaryButton onPress={handleButtonPress} text="Send Funds" showLoader={loading} />
+      <PrimaryButton onPress={handleButtonPress} text={SEND_FUNDS} showLoader={loading} />
     </ScrollView>
   );
 };

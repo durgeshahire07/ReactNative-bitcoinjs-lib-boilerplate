@@ -15,6 +15,13 @@ export const WALLET_ADDRESS = "Wallet Address"
 export const WALLET_BALANCE = "Wallet Balance"
 export const HISTORY = "History"
 export const REMOVE = "Remove"
+export const GO_TO_BLOCK_EXPLORER = "Go to Block Explorer"
+export const ENTER_ADDRESS = "Enter reciever's address"
+export const ENTER_PUB_BTC_ADD = "Enter public BTC Tesetnet address"
+export const ENTER_PUB_POL_ADD = "Enter public mumbai address (0x)"
+export const SEND_FUNDS = "Send Funds"
+export const ENTER_AMOUNT="Enter Amount"
+export const AMOUNT="Amount"
 
 //screens
 export const HOME_SCREEN = "Home"
@@ -29,6 +36,7 @@ export const TRANSACTION_DETAILS_HEADER = "Transaction Details"
 //storage keys
 export const POLYGON_STORAGE_KEY = "polygonPrivateKey"
 export const BITCOIN_STORAGE_KEY = "bitcoinPrivateKey"
+export const PRIVATE_KEY = "PrivateKey"
 
 //keys
 export const ALCHEMY_API_KEY = "v__tED_f4Ncl-dB56BY1XeaHQldWu5VH"

@@ -9,9 +9,9 @@ import {
   Linking,
 } from "react-native";
 import walletStore from "../../store/wallet/walletStore";
-import LabeledInput from "../../components/labeledInput";
 import PrimaryButton from "../../components/primaryButton";
-import { BITCOIN, POLYGON } from "../../constants/commonConstants";
+import endpoints from "../../api/endpoints";
+import { GO_TO_BLOCK_EXPLORER } from "../../constants/commonConstants";
 
 const TransactionDetailScreen = ({ route }) => {
   const transactionHash = route.params?.transactionHash;
@@ -26,18 +26,16 @@ const TransactionDetailScreen = ({ route }) => {
   const [loading, setLoading] = useState(true);
 
   const handleButtonPress = async () => {
-    const blockExplorerUrl = `https://mumbai.polygonscan.com/tx/${transactionHash}`;
+    const blockExplorerUrl = `${endpoints.blockExplorer.polygon}${transactionHash}`;
 
     // Open the URL in the default browser or browser app
     Linking.openURL(blockExplorerUrl).catch((err) => {
       console.error("Error opening URL:", err);
-      // Handle the error as needed
     });
   };
 
   const fetchTransactionData = async () => {
     const data = await walletStore.getTransactionData(walletStore, transactionHash);
-    console.log("data==>", data);
     if (data.status) {
       setTxData({
         hash: transactionHash,
@@ -71,7 +69,7 @@ const TransactionDetailScreen = ({ route }) => {
             <Text style={styles.transactionDetailText}>Transaction Hash: {transactionHash}</Text>
           </View>
 
-          <PrimaryButton onPress={handleButtonPress} text="Go to Block Explorer" />
+          <PrimaryButton onPress={handleButtonPress} text={GO_TO_BLOCK_EXPLORER} />
         </>
       )}
     </ScrollView>
