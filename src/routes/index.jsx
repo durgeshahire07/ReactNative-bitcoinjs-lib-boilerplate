@@ -3,34 +3,41 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/homeScreen";
 import SendFunds from "../screens/sendFundScreen";
 import TransactionDetailScreen from "../screens/txDetailScreen";
+import { 
+  HOME_SCREEN, 
+  TRANSACTION_DETAILS_SCREEN, 
+  SEND_FUNDS_SCREEN,
+  HOME_HEADER,
+  SEND_FUNDS_HEADER,
+  TRANSACTION_DETAILS_HEADER
+} from "../constants/commonConstants";
 
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName={HOME_SCREEN}>
       <Stack.Screen
-        name="Home"
+        name={HOME_SCREEN}
         component={HomeScreen}
         options={{
-          headerTitle: "CryptoWallet",
+          headerTitle: HOME_HEADER,
         }}
       />
       <Stack.Screen
-        name="SendFundScreen"
+        name={SEND_FUNDS_SCREEN}
         component={SendFunds}
         options={{
-          headerTitle: "Send Funds",
+          headerTitle: SEND_FUNDS_HEADER,
         }}
       />
       <Stack.Screen
-        name="TransactionDetailScreen"
+        name={TRANSACTION_DETAILS_SCREEN}
         component={TransactionDetailScreen}
         options={{
-          headerTitle: "Transaction Details",
+          headerTitle: TRANSACTION_DETAILS_HEADER,
         }}
       />
-      {/* Add other routes as needed */}
     </Stack.Navigator>
   );
 };
