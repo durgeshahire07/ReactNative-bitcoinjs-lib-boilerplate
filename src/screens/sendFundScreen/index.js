@@ -123,7 +123,7 @@ const SendFunds = () => {
         showNumpad={true}
       />
       <View style={styles.balanceTextContainer}>
-        <Text style={styles.balanceText}>Available Balance: {walletStore.balance}</Text>
+        <Text style={styles.balanceText}>Available Balance: {walletStore.balance} {walletStore.activeWallet === BITCOIN ? 'BTC' : 'MATIC'}</Text>
       </View>
       <PrimaryButton onPress={handleButtonPress} text={SEND_FUNDS} showLoader={loading} />
     </ScrollView>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   balanceTextContainer: {
-    margin: 0,
+    marginBottom: 20,
   },
   balanceText: {
     fontSize: 16,

@@ -49,3 +49,7 @@ export const canTransferFunds = (walletBalance, amountToSend) => {
     // Check if the amount to send is less than or equal to the wallet balance
     return amountToSend <= walletBalance;
 }
+
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

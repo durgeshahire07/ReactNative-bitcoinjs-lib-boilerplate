@@ -60,10 +60,11 @@ const TransactionDetailScreen = ({ route }) => {
         <ActivityIndicator size="large" color="#3498db" />
       ) : (
         <>
+          <Text style={styles.transactionStatusText}>Transaction Successful</Text>
+
           <View style={styles.balanceTextContainer}>
-            <Text style={styles.transactionStatusText}>Transaction Successful</Text>
             <Text style={styles.transactionDetailText}>Amount Transferred: {txData.amount}</Text>
-            <Text style={styles.transactionDetailText}>Gas {txData.gasFee}</Text>
+            <Text style={styles.transactionDetailText}>Gas Fees: {txData.gasFee}</Text>
             <Text style={styles.transactionDetailText}>From: {txData.from}</Text>
             <Text style={styles.transactionDetailText}>To: {txData.to}</Text>
             <Text style={styles.transactionDetailText}>Transaction Hash: {transactionHash}</Text>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   balanceTextContainer: {
-    margin: 0,
+    marginVertical: 20,
   },
   transactionStatusText: {
     fontSize: 22,

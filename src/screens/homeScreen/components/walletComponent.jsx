@@ -9,7 +9,8 @@ import {
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import walletStore from "../../../store/wallet/walletStore";
-import { SEND, WALLET_BALANCE, WALLET_ADDRESS, REMOVE, HISTORY } from "../../../constants/commonConstants";
+import { SEND, WALLET_BALANCE, WALLET_ADDRESS, REMOVE, HISTORY, BITCOIN } from "../../../constants/commonConstants";
+import { capitalizeFirstLetter } from "../../../utils/stringValidation";
 
 const WalletComponent = ({ walletFetch }) => {
   const navigation = useNavigation();
@@ -33,12 +34,12 @@ const WalletComponent = ({ walletFetch }) => {
     <View style={styles.container}>
       <View style={styles.walletContainer}>
         <Text style={styles.headerText}>
-          {walletStore.activeWallet} Wallet
+          {capitalizeFirstLetter(walletStore.activeWallet)} Wallet
         </Text>
 
         <View style={styles.balanceContainer}>
           <Text style={styles.balanceLabel}>{WALLET_BALANCE}</Text>
-          <Text style={styles.balanceAmount}>{walletStore.balance}</Text>
+          <Text style={styles.balanceAmount}>{parseFloat(walletStore.balance).toFixed(4)} {walletStore.activeWallet === BITCOIN ? "BTC" : "MATIC"}</Text>
         </View>
 
         <View style={styles.addressContainer}>
@@ -59,7 +60,7 @@ const WalletComponent = ({ walletFetch }) => {
             <MaterialIcons name="history" size={30} color="#4ba3eb" />
           </TouchableOpacity>
           <Text style={styles.buttonText}>{HISTORY}</Text>
-        </View>
+        </View> 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleRemoveWallet} style={styles.button}>
             <MaterialIcons name="delete" size={30} color="#f37a7a" />
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     margin: 20,
   },
   buttonContainer: {

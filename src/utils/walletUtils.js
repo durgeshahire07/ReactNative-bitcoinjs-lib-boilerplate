@@ -65,8 +65,8 @@ export const importBitcoinWallet = async (walletStore, privateKey) => {
             // );
 
             // let balanceInBTC = getBalance.data.data.item.confirmedBalance.amount;
-            const result = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=50`)
-            let balanceInSatoshis = result.data.final_balance;
+            const result = await axios.get(`https://mempool.space/testnet/api/address/${address}`)
+            let balanceInSatoshis = result.data.chain_stats.funded_txo_sum;
             const balanceInBTC = balanceInSatoshis / 100000000;
             //updating store values
             walletStore.privateKey = privateKey;
@@ -86,6 +86,12 @@ export const importBitcoinWallet = async (walletStore, privateKey) => {
 
 
     } catch (error) {
+        if (error.response && error.response.status === 429) {
+            return {
+                status: false,
+                errorMessage: 'Insufficient funds'
+            };
+        }
         console.error('error importing bitcoin wallet:', error);
     }
 }
@@ -140,7 +146,7 @@ export const sendBitcoinToReciever = async (
     recieverAddress,
     amountToSend
 ) => {
-    let ra = '2N8yzWEDwhvqh5cXR1UyWWwN92rgndNFci8'
+    let ra = 'tb1qznkwgpapfgmwtuczyqzsgcjvye3zju5e22j4dh'
     try {
         const NETWORK = Bitcoin.networks.testnet;
 
@@ -151,85 +157,88 @@ export const sendBitcoinToReciever = async (
         const { address } = Bitcoin.payments.p2wpkh({ pubkey: keyPair.publicKey, network: NETWORK });
         // const satoshiToSend = amountToSend * 100000000;
         // 10000 sat = 0.0001 btc
-        const satoshiToSend = 0.0001 * 100000000;
-
-        let fee = 0;
-        let inputCount = 0;
-        //going to use 2 as the output count because we'll only send the bitcoin to 2 addresses the receiver's address and our change address.
-        let outputCount = 2
-
+        let amount = 0.0001
 
         const publicKey = keyPair.publicKey.toString('hex');
         const privateKeyWif = keyPair.toWIF();
 
-        //getting unsent transactions
-        // const unspentTxData = await axios.get(
-        //     `https://rest.cryptoapis.io/blockchain-data/bitcoin/testnet/addresses/${address}/unspent-outputs?context=getUnsentTx&limit=50&offset=0`,
-        //     {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'X-API-Key': CRYPTO_API_KEY,
-        //         },
-        //     }
-        // );
-        const result = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=50`)
+        const unspentTxData = [
+            {
+                "txid": "9bdea004e9b8de3678faacdcba0959b730387b9c19d9c25a257c762d04a19d12",
+                "vout": 0,
+                "status":
+                {
+                    "confirmed": true,
+                    "block_height": 2580650,
+                    "block_hash": "0000000000000009ebaf31b57b74c6a24ee7cb5157a6e222c20afdb106e46aac",
+                    "block_time": 1709665396
+                },
+                "value": 20000
+            },
+            {
+                "txid": "4f555e95727d6cd4d668fc16f2914eecb2bad18011d00048d8b990bc6e20c26c",
+                "vout": 1,
+                "status":
+                {
+                    "confirmed": true,
+                    "block_height": 2580660,
+                    "block_hash": "0000000000012e998be3682993253c3767575b597e0912544fafcd5934c8b267",
+                    "block_time": 1709672234
+                },
+                "value": 10000
+            }
+        ]
+
         let totalAmountAvailable = 0;
+        const final_balance = unspentTxData.final_balance
+        
+        let fee = 26456;
+        let inputCount = 0;
+        let outputCount = 2;
+        const satoshiToSend = amount * 100000000;
+        
+        let whatIsLeft = final_balance - fee - satoshiToSend;
 
-        const utxos = result.data.txs
-        console.log("utox", utxos)
-        inputs = []
-        for (const element of utxos) {
-            let utxo = {};
-            utxo.satoshis = element.total;
-            utxo.script = element.inputs[0].script_type;
-            utxo.address = address;
-            // utxo.txId = element.txid;
-            utxo.outputIndex = element.block_index;
-            inputCount += 1;
-            inputs.push(utxo);
-        }
-        console.log('Inputs:', inputs);
-        console.log('Total Amount Available:', walletStore.balance);
-        console.log('Input Count:', inputCount);
+        // Reverse the array
+        const reversedTxData = unspentTxData.reverse();
+        // Get the latest transaction hash
+        let latestTxHash = reversedTxData[0].txid;
 
+        
 
-        // //initiating new transaction - 
-        // const transaction = Bitcoin.Transaction();
+        const psbt = new Bitcoin.Psbt(NETWORK);
 
-        // const inputs = [];
+        psbt.addInput({
+            hash: "4f555e95727d6cd4d668fc16f2914eecb2bad18011d00048d8b990bc6e20c26c",
+            index: 1,
+            witnessUtxo: reversedTxData[0],
+            // redeemScript: Buffer.from("???", 'hex'),
+        });
 
-        // for (const element of utxos) {
-        //     let utxo = {};
-        //     utxo.satoshis = Math.floor(Number(element.amount) * 100000000);
-        //     // utxo.script = element.script_hex;
-        //     utxo.address = address;
-        //     utxo.txId = element.transactionId;
-        //     utxo.outputIndex = element.index;
-        //     totalAmountAvailable += utxo.satoshis;
-        //     inputCount += 1;
-        //     inputs.push(utxo);
-        // }
+        psbt.addOutput({
+            address: ra,
+            value: satoshiToSend,
+        });
 
-        // console.log('Inputs:', inputs);
-        // console.log('Total Amount Available:', totalAmountAvailable);
-        // console.log('Input Count:', inputCount);
+        psbt.signInput(0, keyPair);
+        psbt.finalizeInput(0);
+        const tx = psbt.extractTransaction();
+        console.log(tx.toHex());
 
-        // transaction.from(inputs)
+        // console.log("latext hx", latestTxHash)
 
-        // //formula to calculate transaction size
-        // const transactionSize = inputCount * 180 + outputCount * 34 + 10 - inputCount;
-        // fee = transactionSize * 20
+        // const inputTransactionHash = Buffer.from(reversedTxData[0].txid, 'hex');
+        // const inputTransactionIndex = reversedTxData[0].vout;
 
-        // if (totalAmountAvailable - satoshiToSend - fee < 0) {
-        //     throw new Error("Balance is too low for this transaction");
-        // }
-        // console.log("fee ==>", fee)
-        // var txb = new Bitcoin.Transaction()
-        // txb.addInput(latestTx, 1)
-        // //0.00001
-        // txb.addOutput(ra, 1000)
+        // transaction.addInput(inputTransactionHash, inputTransactionIndex);
 
+        // const { output } = Bitcoin.payments.p2wpkh({ address: ra, network: NETWORK });
+        // const outputValue = satoshiToSend; // Set the value in satoshis you want to send
+        // transaction.addOutput(output, outputValue);
+        // // transaction.addOutput(address, whatIsLeft);
+        // transaction.sign(0, keyPair);
 
+        // let body = txb.build().toHex();
 
         return {
             status: true,
@@ -238,6 +247,7 @@ export const sendBitcoinToReciever = async (
     }
     catch (err) {
         console.log("error occured in sending btc", err)
+
         if (err.message.includes('insufficient funds')) {
             return {
                 status: false,

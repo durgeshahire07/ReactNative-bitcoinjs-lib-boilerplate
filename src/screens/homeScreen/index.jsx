@@ -42,7 +42,7 @@ const HomeScreen = () => {
   };
 
   const handleTabPress = (selectedOption) => {
-    if (!loading && activeTab !== selectedOption) {
+    if (!activeTab !== selectedOption) {
       setActiveTab(selectedOption);
       checkWalletStatus(selectedOption);
     }
