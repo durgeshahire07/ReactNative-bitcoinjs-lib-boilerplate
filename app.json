@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyCryptoWallet",
-    "slug": "MyCryptoWallet",
+    "name": "ReactNative-bitcoinjs-lib",
+    "slug": "ReactNative-bitcoinjs-lib",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
