@@ -11,7 +11,6 @@ Follow these simple steps to use the React Native CryptoConfig-Boilerplate:
 
 ```
 npm install
-
 ```
 #### Patch `react-native-randombytes` lib:
 Navigate to `node_modules/react-native-randombytes/index.js`
