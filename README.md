@@ -4,7 +4,7 @@ Jumpstart your React Native crypto app development with this boilerplate that si
 
 ## Getting Started
 
-Follow these simple steps to use the React Native CryptoConfig-Boilerplate:
+Follow these simple steps to use this React Native Boilerplate:
 
 - Clone the repository: `https://github.com/durgeshahire07/ReactNative-bitcoinjs-lib-ethers`
 - Install dependencies:
