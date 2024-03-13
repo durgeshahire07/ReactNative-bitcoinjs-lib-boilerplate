@@ -41,6 +41,9 @@ function init() {
   }
 }
 ```
-Follow the link to have better clarity on patching the lib: [Here](https://github.com/durgeshahire07/ReactNative-bitcoinjs-lib-ethers/blob/master/patches/react-native-randombytes%2B3.6.1.patch) 
+To better understand the required changes for patching the library, Please refer to the patch file [Here](https://github.com/durgeshahire07/ReactNative-bitcoinjs-lib-ethers/blob/master/patches/react-native-randombytes%2B3.6.1.patch) 
+
+Feel free to contribute to the project!
+
 
 ### Happy Coding 🚀
