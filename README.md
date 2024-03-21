@@ -43,6 +43,13 @@ function init() {
 ```
 To better understand the required changes for patching the library, Please refer to the patch file [Here](https://github.com/durgeshahire07/ReactNative-bitcoinjs-lib-ethers/blob/master/patches/react-native-randombytes%2B3.6.1.patch) 
 
+###
+- Start the project:
+
+```
+npx expo start
+```
+
 Feel free to contribute to the project!
 
 
